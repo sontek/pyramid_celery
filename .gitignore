@@ -1,0 +1,37 @@
+*.db
+
+# web assets generated directory
+gen/
+.webassets-cache/
+
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+_build
+eggs
+parts
+bin
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+logs
+*.log
+*.pid
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+# Vim
+*.swp
+.rope*
+
+# Tags for git-helpers
+tags
+
