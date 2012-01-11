@@ -18,7 +18,6 @@ def main(argv=sys.argv): # pragma: no cover
     config_uri = argv[1]
 
     env = bootstrap(config_uri)
-
     worker = WorkerCommand(app=Celery(env))
     worker.run()
 

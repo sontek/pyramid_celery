@@ -28,8 +28,8 @@ setup(name='pyramid_celery',
       include_package_data=True,
       zip_safe=False,
       install_requires=requires,
-      tests_require=requires,
-      test_suite="pfs",
+      tests_require=requires + ['pytest', 'mock'],
+      test_suite="pyramid_celery",
       entry_points = """\
         [console_scripts]
         pceleryd = pyramid_celery.celeryd:main

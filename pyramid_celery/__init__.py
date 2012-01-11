@@ -21,7 +21,6 @@ class PyramidLoader(_default.Loader):
         return settings
 
 class Celery(App):
-    flask_app = None
     loader_cls = get_full_cls_name(PyramidLoader)
 
     def __init__(self, env=None, *args, **kwargs):
@@ -29,4 +28,4 @@ class Celery(App):
         super(Celery, self).__init__(*args, **kwargs)
 
     def __reduce_args__(self):
-        return (self.flask_app, ) + super(Celery, self).__reduce_args__()
+        return (self.env, ) + super(Celery, self).__reduce_args__()
