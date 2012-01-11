@@ -11,7 +11,6 @@ Now you can either use class based:
 
 ``` python
 from pyramid_celery import Task
-from eventq.managers.settings import UserPermissionManager
 
 class AddTask(Task):
     def run(self, x, y):
