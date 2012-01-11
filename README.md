@@ -30,3 +30,13 @@ def add(x, y):
 Configuration
 =====================
 All standard celery configuration options will work. Check out http://ask.github.com/celery/configuration.html
+
+Demo
+=====================
+To see it all in action check out pyramid_celery_demo, run rabbitmq-server and then do:
+
+``` python
+$ python setup.py develop
+$ populate_pyramid_celery_demo ./development.ini
+$ pserve ./development.ini
+```
