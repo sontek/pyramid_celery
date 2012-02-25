@@ -48,9 +48,13 @@ class PyramidLoader(_default.Loader):
         config = self.app.env['registry'].settings
         config_keys = set(config.keys())
         for key in config_keys & EVAL_SETTINGS:
-            config[key] = eval(config[key])
+            val = config[key]
+            if isinstance(val, str) or isinstance(val, unicode):
+                config[key] = eval(val)
         for key in config_keys & BOOL_SETTINGS:
-            config[key] = asbool(config[key])
+            val = config[key]
+            if isinstance(val, str) or isinstance(val, unicode):
+                config[key] = asbool(val)
         settings = self.setup_settings(config)
         self.configured = True
         return settings
