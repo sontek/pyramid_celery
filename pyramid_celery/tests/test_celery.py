@@ -20,7 +20,17 @@ class TestCelery(unittest.TestCase):
     def test_celery(self):
         from pyramid_celery import Celery
 
-        settings = {'CELERY_ALWAYS_EAGER': True}
+        settings = {
+                'CELERY_ALWAYS_EAGER': 'true',
+                'CELERYD_CONCURRENCY': '1',
+                'BROKER_TRANSPORT_OPTIONS': '{"foo": "bar"}',
+                'ADMINS': '(("Foo Bar", "foo@bar"), ("Baz Qux", "baz@qux"))',
+                'CELERYD_ETA_SCHEDULER_PRECISION': '0.1',
+                'CASSANDRA_SERVERS': '["foo", "bar"]',
+                'CELERY_ANNOTATIONS': '[1, 2, 3]',   # any
+                'CELERY_ROUTERS': 'some.string',  # also any
+                'SOME_KEY': 'SOME VALUE',
+        }
         registry = Mock()
         registry.settings = settings
 
@@ -36,6 +46,20 @@ class TestCelery(unittest.TestCase):
         assert settings == new_settings
         assert celery.env == env
 
+        # Check conversions
+        assert new_settings['CELERY_ALWAYS_EAGER'] == True
+        assert new_settings['CELERYD_CONCURRENCY'] == 1
+        assert new_settings['ADMINS'] == (
+                ("Foo Bar", "foo@bar"),
+                ("Baz Qux", "baz@qux")
+        )
+        assert new_settings['BROKER_TRANSPORT_OPTIONS'] == {"foo": "bar"}
+        assert new_settings['CELERYD_ETA_SCHEDULER_PRECISION'] > 0.09
+        assert new_settings['CELERYD_ETA_SCHEDULER_PRECISION'] < 0.11
+        assert new_settings['CASSANDRA_SERVERS'] == ["foo", "bar"]
+        assert new_settings['CELERY_ANNOTATIONS'] == [1, 2, 3]
+        assert new_settings['CELERY_ROUTERS'] == 'some.string'
+        assert new_settings['SOME_KEY'] == settings['SOME_KEY']
 
     @patch('pyramid_celery.celeryd.Celery')
     @patch('pyramid_celery.celeryd.WorkerCommand')
