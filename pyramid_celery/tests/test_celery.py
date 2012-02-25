@@ -20,7 +20,12 @@ class TestCelery(unittest.TestCase):
     def test_celery(self):
         from pyramid_celery import Celery
 
-        settings = {'CELERY_ALWAYS_EAGER': True}
+        settings = {
+                'CELERY_ALWAYS_EAGER': 'true',
+                'CELERYD_CONCURRENCY': '1',
+                'ADMINS': '(("Foo Bar", "foo@bar"), ("Baz Qux", "baz@qux"))',
+                'SOME_KEY': 'SOME VALUE',
+        }
         registry = Mock()
         registry.settings = settings
 
@@ -36,6 +41,12 @@ class TestCelery(unittest.TestCase):
         assert settings == new_settings
         assert celery.env == env
 
+        assert new_settings['CELERY_ALWAYS_EAGER'] == True
+        assert new_settings['CELERYD_CONCURRENCY'] == 1
+        assert new_settings['ADMINS'] == (
+                ("Foo Bar", "foo@bar"),
+                ("Baz Qux", "baz@qux")
+        )
 
     @patch('pyramid_celery.celeryd.Celery')
     @patch('pyramid_celery.celeryd.WorkerCommand')
