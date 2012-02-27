@@ -17,6 +17,25 @@ class TestCelery(unittest.TestCase):
         assert celery.config == config
         assert Task.app.config == config
 
+    def test_includeme_with_quoted_string(self):
+        from pyramid_celery import includeme
+        from pyramid_celery import celery
+        from pyramid_celery import Task
+
+        config = Mock()
+        config.registry = Mock()
+        settings = {
+                'CELERY_ALWAYS_EAGER': True,
+                'BROKER_URL': '"foo"'
+                }
+
+        config.registry.settings = settings
+        includeme(config)
+
+        assert celery.config == config
+        assert Task.app.config == config
+        assert celery.config.registry.settings['BROKER_URL'] == 'foo'
+
     def test_celery(self):
         from pyramid_celery import Celery
 
