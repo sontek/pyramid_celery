@@ -1,21 +1,12 @@
-from celery import Celery
-
 from celery.app import App
 from celery.app import defaults
 from celery.loaders import default as _default
 from celery.utils import get_full_cls_name
 
-celery = Celery()
-Task = celery.create_task_cls()
 
 def clean_quoted_config(config, key):
     # ini doesn't allow quoting, but lets support it to fit with celery
     config[key] = config[key].replace('"', '')
-
-def includeme(config):
-    convert_celery_options(config.registry.settings)
-    celery.config_from_object(config.registry.settings)
-    celery.config = config
 
 TYPES_TO_OBJ = {
     'any': (object, None),
@@ -33,6 +24,7 @@ OPTIONS = {
     for key, opt in defaults.flatten(defaults.NAMESPACES)
 #    if opt.type != 'string'
 }
+
 
 def convert_celery_options(config):
     """
@@ -52,6 +44,7 @@ def convert_celery_options(config):
                     pass  # any can be anything; even a string
             elif not isinstance(value, opt_type[0]):
                 config[key] = opt_type[1](value)
+
 
 class PyramidLoader(_default.Loader):
 
@@ -73,3 +66,13 @@ class Celery(App):
 
     def __reduce_args__(self):
         return (self.env, ) + super(Celery, self).__reduce_args__()
+
+
+celery = Celery()
+Task = celery.create_task_cls()
+
+
+def includeme(config):
+    convert_celery_options(config.registry.settings)
+    celery.config_from_object(config.registry.settings)
+    celery.config = config
