@@ -1,5 +1,5 @@
 import os
-
+import sys
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -7,9 +7,11 @@ README = open(os.path.join(here, 'README.md')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = ['pyramid', 'celery']
+if sys.version_info < (2, 7):
+    requires.append('argparse')
 
 setup(name='pyramid_celery',
-      version='0.0',
+      version='1.0dev',
       description='Celery integration with pyramid',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -35,4 +37,3 @@ setup(name='pyramid_celery',
         pceleryd = pyramid_celery.celeryd:main
       """,
       )
-
