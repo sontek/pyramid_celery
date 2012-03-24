@@ -1,5 +1,5 @@
-from pyramid_celery import Task
-from pyramid_celery import celery
+from celery.task import task
+from celery.task import Task
 
 import transaction
 
@@ -15,7 +15,7 @@ class DeleteTask(Task):
         DBSession.delete(task)
         transaction.commit()
 
-@celery.task
+@task
 def add_task(task):
     print 'creating task %s' % task
     task = TaskItem(task=task)

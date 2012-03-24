@@ -13,5 +13,3 @@ class CommandMixin(object):
         bootstrap(argv[1])
         self.app = default_app
         return argv[:1] + argv[2:]
-
-
