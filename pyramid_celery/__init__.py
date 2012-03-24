@@ -4,6 +4,7 @@ from celery.app import defaults
 
 def clean_quoted_config(config, key):
     # ini doesn't allow quoting, but lets support it to fit with celery
+    key= str.upper(key.split('.')[1]) if key.startswith('celery.') else key
     config[key] = config[key].replace('"', '')
 
 TYPES_TO_OBJ = {
@@ -34,7 +35,7 @@ def convert_celery_options(config):
         opt_type = OPTIONS.get(key)
 
         if opt_type:
-            if opt_type == 'string' or key == 'BROKER_URL':
+            if opt_type == 'string' or key == 'celery.broker_url':
                 clean_quoted_config(config, key)
             elif opt_type[0] is object:
                 try:
