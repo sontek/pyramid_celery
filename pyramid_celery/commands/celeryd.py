@@ -1,6 +1,7 @@
 import sys
 from pyramid_celery.commands import CommandMixin
 from celery.bin.celeryd import WorkerCommand as BaseWorkerCommand
+
 try:
     from celery.concurrency.processes.forking import freeze_support
 except ImportError:  # pragma: no cover
@@ -9,7 +10,6 @@ except ImportError:  # pragma: no cover
 
 class WorkerCommand(CommandMixin, BaseWorkerCommand):
     preload_options = ()
-
 
 
 def main():

@@ -5,8 +5,7 @@ from mock import patch
 class TestCelery(unittest.TestCase):
     def test_includeme(self):
         from pyramid_celery import includeme
-        from pyramid_celery import celery
-        from pyramid_celery import Task
+        from celery.app import default_app
 
         config = Mock()
         config.registry = Mock()
@@ -14,30 +13,28 @@ class TestCelery(unittest.TestCase):
         config.registry.settings = settings
         includeme(config)
 
-        assert celery.config == config
-        assert Task.app.config == config
+        assert default_app.config == config
 
     def test_includeme_with_quoted_string(self):
         from pyramid_celery import includeme
-        from pyramid_celery import celery
-        from pyramid_celery import Task
+        from celery.app import default_app
 
         config = Mock()
         config.registry = Mock()
         settings = {
-                'CELERY_ALWAYS_EAGER': True,
-                'BROKER_URL': '"foo"'
-                }
+            'CELERY_ALWAYS_EAGER': True,
+            'BROKER_URL': '"foo"'
+        }
 
         config.registry.settings = settings
         includeme(config)
 
-        assert celery.config == config
-        assert Task.app.config == config
-        assert celery.config.registry.settings['BROKER_URL'] == 'foo'
+        assert default_app.config == config
+        assert default_app.config.registry.settings['BROKER_URL'] == 'foo'
 
-    def test_celery(self):
-        from pyramid_celery import Celery
+    def test_detailed_includeme(self):
+        from pyramid_celery import includeme
+        from celery.app import default_app
 
         settings = {
                 'CELERY_ALWAYS_EAGER': 'true',
@@ -53,20 +50,14 @@ class TestCelery(unittest.TestCase):
                 'CELERY_IMPORTS': '("myapp.tasks", )'
         }
 
-        registry = Mock()
-        registry.settings = settings
+        config = Mock()
+        config.registry = Mock()
 
-        env = {
-            'registry': registry
-        }
+        config.registry.settings = settings
 
-        celery = Celery(env)
-        new_settings = celery.loader.read_configuration()
-        reduced_args = celery.__reduce_args__()
+        includeme(config)
 
-        assert reduced_args[0] == env
-        assert settings == new_settings
-        assert celery.env == env
+        new_settings = default_app.config.registry.settings
 
         # Check conversions
         assert new_settings['CELERY_ALWAYS_EAGER'] == True
@@ -85,22 +76,22 @@ class TestCelery(unittest.TestCase):
         assert new_settings['CELERY_IMPORTS'] == ("myapp.tasks", )
 
     def test_celery_quoted_values(self):
-        from pyramid_celery import Celery
+        from pyramid_celery import includeme
+        from celery.app import default_app
 
         settings = {
                 'BROKER_URL': '"redis://localhost:6379/0"',
                 'BROKER_TRANSPORT_OPTIONS': '{"foo": "bar"}',
         }
 
-        registry = Mock()
-        registry.settings = settings
+        config = Mock()
+        config.registry = Mock()
 
-        env = {
-            'registry': registry
-        }
+        config.registry.settings = settings
 
-        celery = Celery(env)
-        new_settings = celery.loader.read_configuration()
+        includeme(config)
+
+        new_settings = default_app.config.registry.settings
 
         assert new_settings['BROKER_URL'] == 'redis://localhost:6379/0'
 
@@ -108,7 +99,8 @@ class TestCelery(unittest.TestCase):
     @patch('pyramid_celery.celeryd.WorkerCommand')
     @patch('pyramid_celery.celeryd.bootstrap')
     def test_celeryd(self, bootstrap, workercommand, celery):
-        from pyramid_celery.celeryd import main
+        from pyramid_celery.commands.celeryd import main
+
         worker = Mock()
         run = Mock()
 
