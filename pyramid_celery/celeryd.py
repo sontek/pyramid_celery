@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import argparse
+from celery.app import default_app
 from celery.bin.celeryd import WorkerCommand
 from pyramid.paster import bootstrap
-from pyramid_celery import Celery
 
 
 def main(): # pragma: no cover
@@ -11,7 +11,7 @@ def main(): # pragma: no cover
             help='Configuration file (and optionally section)')
     options = parser.parse_args()
     env = bootstrap(options.config)
-    worker = WorkerCommand(app=Celery(env))
+    worker = WorkerCommand(app=default_app)
     worker.run()
 
 

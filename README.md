@@ -10,8 +10,10 @@ or by calling config.include('pyramid_celery').
 Now you can either use class based:
 
 ``` python
-from pyramid_celery import Task
+from celery.task import task
+from celery.task import Task
 
+@task
 class AddTask(Task):
     def run(self, x, y):
         print x+y
@@ -20,9 +22,9 @@ class AddTask(Task):
 or decorator based:
 
 ``` python
-from pyramid_celery import celery
+from celery.task import task
 
-@celery.task
+@task
 def add(x, y):
     print x+y
 ```
