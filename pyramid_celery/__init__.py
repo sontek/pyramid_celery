@@ -34,7 +34,7 @@ def convert_celery_options(config):
         opt_type = OPTIONS.get(key)
 
         if opt_type:
-            if opt_type == 'string' or key == 'BROKER_URL':
+            if opt_type == 'string' or key == 'celery.broker_url':
                 clean_quoted_config(config, key)
             elif opt_type[0] is object:
                 try:
