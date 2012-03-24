@@ -12,7 +12,7 @@ def main(global_config, **settings):
 
     config.add_route('index', '/')
     config.add_route('add_task', '/add_task')
-    config.add_route('delete_task', '/delete_task/{task_id}')
+    config.add_route('delete_task', '/delete_task/{task_pk}')
 
     config.scan()
 

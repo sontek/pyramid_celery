@@ -4,7 +4,7 @@
       % if tasks:
           <legend>Tasks</legend>
         % for task in tasks:
-          Task: ${task.task}<a href="${request.route_url('delete_task', task_id=task.id)}"> [ delete ] </a><br />
+          Task: ${task.task}<a href="${request.route_url('delete_task', task_pk=task.id)}"> [ delete ] </a><br />
         % endfor
       % else:
         No tasks

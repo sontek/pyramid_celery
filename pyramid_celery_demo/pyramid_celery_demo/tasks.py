@@ -9,9 +9,9 @@ from .models import (
 )
 
 class DeleteTask(Task):
-    def run(self, task_id):
-        print 'deleting task! %s' % task_id
-        task = DBSession.query(TaskItem).filter(TaskItem.id==task_id)[0]
+    def run(self, task_pk):
+        print 'deleting task! %s' % task_pk
+        task = DBSession.query(TaskItem).filter(TaskItem.id==task_pk)[0]
         DBSession.delete(task)
         transaction.commit()
 
