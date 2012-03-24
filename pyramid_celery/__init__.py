@@ -14,14 +14,13 @@ TYPES_TO_OBJ = {
     'int': (int, int),
     'list': (list, eval),
     'tuple': (tuple, eval),
-    'string': (str, None),
+    'string': (str, str),
 }
 
 
 OPTIONS = {
     key: TYPES_TO_OBJ[opt.type]
     for key, opt in defaults.flatten(defaults.NAMESPACES)
-#    if opt.type != 'string'
 }
 
 
@@ -32,9 +31,8 @@ def convert_celery_options(config):
 
     for key, value in config.iteritems():
         opt_type = OPTIONS.get(key)
-
         if opt_type:
-            if opt_type == 'string' or key == 'BROKER_URL':
+            if opt_type[0] == str:
                 clean_quoted_config(config, key)
             elif opt_type[0] is object:
                 try:
