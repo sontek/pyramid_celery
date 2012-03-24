@@ -37,6 +37,8 @@ setup(name='pyramid_celery',
       test_suite="pyramid_celery",
       entry_points = """\
         [console_scripts]
-        pceleryd = pyramid_celery.celeryd:main
+        pceleryd = pyramid_celery.commands.celeryd:main
+        pceleryctl = pyramid_celery.commands.celeryctl:main
+        pcelerybeat = pyramid_celery.commands.celerybeat:main
       """,
       )
