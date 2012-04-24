@@ -7,6 +7,7 @@ requires = [
     'pyramid_tm',
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
+    'redis',
     ]
 
 setup(name='pyramid_celery_demo',
