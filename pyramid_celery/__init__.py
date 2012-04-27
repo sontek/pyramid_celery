@@ -18,7 +18,7 @@ TYPES_TO_OBJ = {
 }
 
 
-OPTIONS = (
+OPTIONS = dict(
     (key, TYPES_TO_OBJ[opt.type])
     for key, opt in defaults.flatten(defaults.NAMESPACES)
 )
