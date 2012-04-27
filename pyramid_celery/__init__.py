@@ -18,10 +18,10 @@ TYPES_TO_OBJ = {
 }
 
 
-OPTIONS = {
-    key: TYPES_TO_OBJ[opt.type]
+OPTIONS = (
+    (key, TYPES_TO_OBJ[opt.type])
     for key, opt in defaults.flatten(defaults.NAMESPACES)
-}
+)
 
 
 def convert_celery_options(config):
