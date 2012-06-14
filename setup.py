@@ -40,5 +40,6 @@ setup(name='pyramid_celery',
         pceleryd = pyramid_celery.commands.celeryd:main
         pceleryctl = pyramid_celery.commands.celeryctl:main
         pcelerybeat = pyramid_celery.commands.celerybeat:main
+        pceleryev = pyramid_celery.commands.celeryev:main
       """,
       )
