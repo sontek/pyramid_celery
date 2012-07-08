@@ -5,6 +5,12 @@ from celery.schedules import crontab
 from celery.app import default_app
 from celery.app import defaults
 
+def str_to_bool(term, table={"false": False, "no": False, "0": False,
+                             "true":  True, "yes": True,  "1": True}):
+    try:
+        return table[term.lower()]
+    except KeyError:
+        raise TypeError("Can't coerce %r to type bool" % (term, ))
 
 def clean_quoted_config(config, key):
     # ini doesn't allow quoting, but lets support it to fit with celery
@@ -12,7 +18,7 @@ def clean_quoted_config(config, key):
 
 TYPES_TO_OBJ = {
     'any': (object, None),
-    'bool': (bool, defaults.str_to_bool),
+    'bool': (bool, str_to_bool),
     'dict': (dict, eval),
     'float': (float, float),
     'int': (int, int),
