@@ -29,6 +29,6 @@ def create_task(request):
 @view_config(route_name='delete_task')
 def delete_task(request):
     task_pk = request.matchdict['task_pk']
-    DeleteTask.delay(task_pk)
+    DeleteTask().delay(task_pk)
     time.sleep(1)
     return HTTPFound(request.route_url('index'))

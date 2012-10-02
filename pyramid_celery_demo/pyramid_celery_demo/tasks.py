@@ -1,5 +1,5 @@
-from celery.task import task
 from celery.task import Task
+from celery.task import task
 
 import transaction
 
