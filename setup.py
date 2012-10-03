@@ -11,7 +11,7 @@ if sys.version_info < (2, 7):
     requires.append('argparse')
 
 setup(name='pyramid_celery',
-      version='1.2',
+      version='1.3',
       description='Celery integration with pyramid',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
