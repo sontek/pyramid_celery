@@ -8,7 +8,8 @@ requires = [
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'redis',
-    ]
+    'psycopg2'
+]
 
 setup(name='long_running_with_tm',
       version='0.0',

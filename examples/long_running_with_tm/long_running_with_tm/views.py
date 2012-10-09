@@ -6,14 +6,14 @@ from .models import (
     TaskItem,
 )
 
-from pyramid_celery_demo.tasks import (
+from .tasks import (
     DeleteTask,
     add_task
 )
 
 import time
 
-@view_config(route_name='index', renderer='pyramid_celery_demo:templates/tasks.mako')
+@view_config(route_name='index', renderer='long_running_with_tm:templates/tasks.mako')
 def index(request):
     tasks = DBSession.query(TaskItem).all()
     return {'tasks': tasks }
