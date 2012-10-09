@@ -10,9 +10,9 @@ requires = [
     'redis',
     ]
 
-setup(name='pyramid_celery_demo',
+setup(name='long_running_with_tm',
       version='0.0',
-      description='pyramid_celery_demo',
+      description='long_running_with_tm',
       long_description="",
       classifiers=[
         "Programming Language :: Python",
@@ -27,13 +27,13 @@ setup(name='pyramid_celery_demo',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='pyramid_celery_demo',
+      test_suite='long_running_with_tm',
       install_requires = requires,
       entry_points = """\
       [paste.app_factory]
-      main = pyramid_celery_demo:main
+      main = long_running_with_tm:main
       [console_scripts]
-      populate_pyramid_celery_demo = pyramid_celery_demo.scripts.populate:main
+      populate_long_running_with_tm = long_running_with_tm.scripts.populate:main
       """,
       )
 
