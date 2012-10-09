@@ -9,7 +9,7 @@ from pyramid.paster import (
     setup_logging,
     )
 
-from pyramid_celery_demo.models import (
+from ..models import (
     DBSession,
     TaskItem,
     Base,
