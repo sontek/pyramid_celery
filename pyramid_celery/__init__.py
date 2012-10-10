@@ -3,7 +3,7 @@ from datetime import timedelta
 from celery.schedules import crontab
 
 from celery.app import defaults
-from celery import current_app as celery
+from pyramid_celery.app import app
 
 def str_to_bool(term, table={"false": False, "no": False, "0": False,
                              "true":  True, "yes": True,  "1": True}):
@@ -54,4 +54,4 @@ def convert_celery_options(config):
 
 def includeme(config):
     convert_celery_options(config.registry.settings)
-    celery.add_defaults(config.registry.settings)
+    app.add_defaults(config.registry.settings)

@@ -31,7 +31,9 @@ def add(x, y):
 
 Configuration
 =====================
-All standard celery configuration options will work. Check out http://ask.github.com/celery/configuration.html
+All standard celery configuration options will work. Check out
+http://docs.celeryproject.org/en/master/configuration.html
+
 
 Demo
 =====================
