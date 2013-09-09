@@ -2,18 +2,8 @@ import unittest
 from mock import Mock
 from mock import patch
 
+
 class TestCelery(unittest.TestCase):
-    def test_includeme(self):
-        from pyramid_celery import includeme
-        from celery.app import default_app
-
-        config = Mock()
-        config.registry = Mock()
-        settings = {'CELERY_ALWAYS_EAGER': True}
-        config.registry.settings = settings
-        includeme(config)
-
-        assert default_app.config == config
 
     def test_includeme_with_quoted_string(self):
         from pyramid_celery import includeme
@@ -29,8 +19,7 @@ class TestCelery(unittest.TestCase):
         config.registry.settings = settings
         includeme(config)
 
-        assert default_app.config == config
-        assert default_app.config.registry.settings['BROKER_URL'] == 'foo'
+        assert default_app.conf['BROKER_URL'] == 'foo'
 
     def test_detailed_includeme(self):
         from pyramid_celery import includeme
@@ -42,7 +31,7 @@ class TestCelery(unittest.TestCase):
                 'BROKER_URL': '"redis:://localhost:6379/0"',
                 'BROKER_TRANSPORT_OPTIONS': '{"foo": "bar"}',
                 'ADMINS': '(("Foo Bar", "foo@bar"), ("Baz Qux", "baz@qux"))',
-                'CELERYD_ETA_SCHEDULER_PRECISION': '0.1',
+                'CELERYD_TASK_TIME_LIMIT': '0.1',
                 'CASSANDRA_SERVERS': '["foo", "bar"]',
                 'CELERY_ANNOTATIONS': '[1, 2, 3]',   # any
                 'CELERY_ROUTERS': 'some.string',  # also any
@@ -57,7 +46,7 @@ class TestCelery(unittest.TestCase):
 
         includeme(config)
 
-        new_settings = default_app.config.registry.settings
+        new_settings = default_app.conf
 
         # Check conversions
         assert new_settings['CELERY_ALWAYS_EAGER'] == True
@@ -67,8 +56,8 @@ class TestCelery(unittest.TestCase):
                 ("Baz Qux", "baz@qux")
         )
         assert new_settings['BROKER_TRANSPORT_OPTIONS'] == {"foo": "bar"}
-        assert new_settings['CELERYD_ETA_SCHEDULER_PRECISION'] > 0.09
-        assert new_settings['CELERYD_ETA_SCHEDULER_PRECISION'] < 0.11
+        assert new_settings['CELERYD_TASK_TIME_LIMIT'] > 0.09
+        assert new_settings['CELERYD_TASK_TIME_LIMIT'] < 0.11
         assert new_settings['CASSANDRA_SERVERS'] == ["foo", "bar"]
         assert new_settings['CELERY_ANNOTATIONS'] == [1, 2, 3]
         assert new_settings['CELERY_ROUTERS'] == 'some.string'
@@ -91,7 +80,7 @@ class TestCelery(unittest.TestCase):
 
         includeme(config)
 
-        new_settings = default_app.config.registry.settings
+        new_settings = default_app.conf
 
         assert new_settings['BROKER_URL'] == 'redis://localhost:6379/0'
 
