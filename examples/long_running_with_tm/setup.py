@@ -6,6 +6,7 @@ requires = [
     'transaction',
     'pyramid_tm',
     'pyramid_debugtoolbar',
+    'pyramid_celery',
     'zope.sqlalchemy',
     'redis',
     'psycopg2'
