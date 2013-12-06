@@ -3,6 +3,7 @@ from datetime import timedelta
 from celery.schedules import crontab
 
 from celery.app import defaults
+from celery.registry import tasks
 from celery import current_app as celery
 
 def str_to_bool(term, table={"false": False, "no": False, "0": False,
@@ -52,6 +53,14 @@ def convert_celery_options(config):
             elif not isinstance(value, opt_type[0]):
                 config[key] = opt_type[1](value)
 
+
 def includeme(config):
+
     convert_celery_options(config.registry.settings)
     celery.add_defaults(config.registry.settings)
+    # delete cached property in order to get them reloaded from the new conf
+    del(celery.backend)
+    for name, task in tasks.items():
+        # ensure that every already registed tasks doens use an unconfigured
+        # backend.
+        task.backend = celery.backend
