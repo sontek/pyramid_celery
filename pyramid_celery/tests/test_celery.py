@@ -103,3 +103,29 @@ class TestCelery(unittest.TestCase):
 #        workercommand.assert_called_with(app=celery(env))
 #        bootstrap.assert_called_with('config.ini')
 #        run.assert_called_once_with()
+
+    def test_result_backend(self):
+
+        from pyramid_celery import includeme
+        from celery.app import default_app
+        from celery.backends.redis import RedisBackend
+        from celery.backends.amqp import AMQPBackend
+
+        config = Mock()
+        config.registry = Mock()
+
+        settings = {
+            'CELERY_RESULT_BACKEND': '"amqp"'
+        }
+        config.registry.settings = settings
+
+        includeme(config)
+        self.assertIsInstance(default_app.backend, AMQPBackend)
+
+        settings = {
+            'CELERY_RESULT_BACKEND': '"redis"'
+        }
+        config.registry.settings = settings
+
+        includeme(config)
+        self.assertIsInstance(default_app.backend, RedisBackend)
