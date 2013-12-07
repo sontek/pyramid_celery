@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import sys
 from pyramid_celery.commands import CommandMixin
 from celery.bin.celeryd import WorkerCommand as BaseWorkerCommand

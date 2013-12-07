@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from pyramid_celery.commands import CommandMixin
 from celery.bin.celerybeat import BeatCommand as BaseBeatCommand
 from celery.bin.base import Command

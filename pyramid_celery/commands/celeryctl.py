@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from pyramid_celery.commands import CommandMixin
 from celery.bin.celery import CeleryCommand as BaseCeleryCtl
 

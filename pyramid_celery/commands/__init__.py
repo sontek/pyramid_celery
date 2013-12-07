@@ -1,10 +1,13 @@
+from __future__ import absolute_import
+
 import sys
+
 from pyramid.paster import bootstrap
 from celery.app import default_app
 
 
 class CommandMixin(object):
-    preload_options = []
+    preload_options = ()
 
     def setup_app_from_commandline(self, argv):
         if len(argv) < 2:

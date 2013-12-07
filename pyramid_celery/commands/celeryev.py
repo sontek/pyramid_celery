@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from pyramid_celery.commands import CommandMixin
 from celery.bin.celeryev import EvCommand as BaseEvCommand
 from celery.bin.base import Command
