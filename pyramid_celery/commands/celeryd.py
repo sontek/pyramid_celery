@@ -2,7 +2,11 @@ from __future__ import absolute_import
 
 import sys
 from pyramid_celery.commands import CommandMixin
-from celery.bin.celeryd import WorkerCommand as BaseWorkerCommand
+try:
+    from celery.bin.celeryd import WorkerCommand as BaseWorkerCommand
+except ImportError:
+    # Celery >=3.1
+    from celery.bin.celery import worker as BaseWorkerCommand
 
 try:
     from celery.concurrency.processes.forking import freeze_support

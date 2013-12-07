@@ -1,9 +1,12 @@
 from __future__ import absolute_import
 
 from pyramid_celery.commands import CommandMixin
-from celery.bin.celeryev import EvCommand as BaseEvCommand
-from celery.bin.base import Command
+try:
+    from celery.bin.celeryev import EvCommand as BaseEvCommand
+except ImportError:
+    from celery.bin.celery import events as BaseEvCommand
 
+from celery.bin.base import Command
 
 class EvCommand(CommandMixin, BaseEvCommand):
     preload_options = tuple(BaseEvCommand.preload_options

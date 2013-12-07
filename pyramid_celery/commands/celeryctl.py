@@ -1,7 +1,10 @@
 from __future__ import absolute_import
 
 from pyramid_celery.commands import CommandMixin
-from celery.bin.celery import CeleryCommand as BaseCeleryCtl
+try:
+    from celery.bin.celery import CeleryCommand as BaseCeleryCtl
+except ImportError:
+    from celery.bin.celery import control as BaseCeleryCtl
 
 
 class CeleryCtl(CommandMixin, BaseCeleryCtl):
