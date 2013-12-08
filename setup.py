@@ -10,6 +10,7 @@ requires = ['pyramid', 'celery']
 if sys.version_info < (2, 7):
     requires.append('argparse')
 
+
 setup(name='pyramid_celery',
       version='1.3',
       description='Celery integration with pyramid',
@@ -35,11 +36,13 @@ setup(name='pyramid_celery',
       install_requires=requires,
       tests_require=requires + ['pytest', 'mock'],
       test_suite="pyramid_celery",
-      entry_points = """\
+      entry_points="""\
         [console_scripts]
+        pcelery = pyramid_celery.commands.celery:main
+        # keep for compatibility
         pceleryd = pyramid_celery.commands.celeryd:main
         pceleryctl = pyramid_celery.commands.celeryctl:main
         pcelerybeat = pyramid_celery.commands.celerybeat:main
         pceleryev = pyramid_celery.commands.celeryev:main
-      """,
+        """
       )

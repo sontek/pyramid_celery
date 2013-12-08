@@ -41,5 +41,10 @@ To see it all in action check out pyramid_celery_demo, run rabbitmq-server and t
 $ python setup.py develop
 $ populate_pyramid_celery_demo ./development.ini
 $ pserve ./development.ini
-$ pceleryd ./development.ini
+$ pcelery ./development.ini worker
+```
+
+If you are using celery < 3.1 use  older celery command lines binding.
+``` python
+pceleryd development.ini
 ```
