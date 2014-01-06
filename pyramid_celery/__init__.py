@@ -21,6 +21,8 @@ def str_to_bool(term, table={"false": False, "no": False, "0": False,
 def clean_quoted_config(config, key):
     # ini doesn't allow quoting, but lets support it to fit with celery
     config[key] = config[key].replace('"', '')
+    # ini injects '\n' in multi-line values, let's remove them
+    config[key] = config[key].replace('/n', '')
 
 TYPES_TO_OBJ = {
     'any': (object, None),
