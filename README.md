@@ -1,3 +1,5 @@
+NB: I have made minimal patches to make this (appear to) work on Python 3.x and Pyramid 1.5. I have not extensively tested these changes, but celery workers and celerybeat both start up and start working. 
+
 Getting Started
 =====================
 Include pyramid_celery either by setting your includes in your .ini,
