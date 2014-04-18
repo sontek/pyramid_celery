@@ -44,7 +44,6 @@ def convert_celery_options(config):
     """
     Converts celery options to apropriate types
     """
-    print(config)
     for key, value in config.items():
         opt_type = OPTIONS.get(key)
         if opt_type:
