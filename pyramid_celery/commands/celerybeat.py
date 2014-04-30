@@ -4,7 +4,7 @@ from pyramid_celery.commands import CommandMixin
 try:
     from celery.bin.celerybeat import BeatCommand as BaseBeatCommand
 except ImportError:
-    from celery.bin.celery import beat as BaseCeleryCtl
+    from celery.bin.celery import beat as BaseBeatCommand
 
 from celery.bin.base import Command
 
