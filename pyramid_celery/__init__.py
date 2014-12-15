@@ -11,12 +11,14 @@ except ImportError:
 
 from celery import current_app as celery
 
+
 def str_to_bool(term, table={"false": False, "no": False, "0": False,
                              "true":  True, "yes": True,  "1": True}):
     try:
         return table[term.lower()]
     except KeyError:
         raise TypeError("Can't coerce %r to type bool" % (term, ))
+
 
 def clean_quoted_config(config, key):
     # ini doesn't allow quoting, but lets support it to fit with celery
@@ -45,7 +47,7 @@ def convert_celery_options(config):
     Converts celery options to apropriate types
     """
 
-    for key, value in config.iteritems():
+    for key, value in config.items():
         opt_type = OPTIONS.get(key)
         if opt_type:
             if opt_type[0] == str:
@@ -60,7 +62,6 @@ def convert_celery_options(config):
 
 
 def includeme(config):
-
     convert_celery_options(config.registry.settings)
     celery.add_defaults(config.registry.settings)
     # delete cached property in order to get them reloaded from the new conf

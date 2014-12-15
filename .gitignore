@@ -1,39 +1,49 @@
-*.db
+*.py[cod]
 
-# web assets generated directory
-gen/
-.webassets-cache/
-
-*.py[co]
+# C extensions
+*.so
 
 # Packages
 *.egg
 *.egg-info
 dist
 build
-_build
 eggs
 parts
 bin
+var
+sdist
 develop-eggs
 .installed.cfg
+lib
+lib64
 
 # Installer logs
 pip-log.txt
-logs
-*.log
-*.pid
 
 # Unit test / coverage reports
 .coverage
 .tox
+nosetests.xml
 
-# Vim
-*.swp
-.rope*
+# Translations
+*.mo
 
-# Tags for git-helpers
-tags
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Complexity
+output/*.html
+output/*/index.html
+
+# Sphinx
+docs/_build
 
 # Emacs
 *~
+
+# Pytest
+coverage.xml
+junit.xml
