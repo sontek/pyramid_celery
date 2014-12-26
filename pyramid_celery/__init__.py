@@ -1,72 +1,38 @@
-# used by celerybeat
-from datetime import timedelta
-from celery.schedules import crontab
-
-from celery.app import defaults
-try:
-    from celery import registry
-except ImportError:
-    # Celery >= 3.1
-    from celery import current_app as registry
-
-from celery import current_app as celery
+from celery import Celery
+from celery import signals
+from celery.bin import Option
+from pyramid.paster import bootstrap
 
 
-def str_to_bool(term, table={"false": False, "no": False, "0": False,
-                             "true":  True, "yes": True,  "1": True}):
-    try:
-        return table[term.lower()]
-    except KeyError:
-        raise TypeError("Can't coerce %r to type bool" % (term, ))
+celery_app = Celery()
 
 
-def clean_quoted_config(config, key):
-    # ini doesn't allow quoting, but lets support it to fit with celery
-    config[key] = config[key].replace('"', '')
-
-TYPES_TO_OBJ = {
-    'any': (object, None),
-    'bool': (bool, str_to_bool),
-    'dict': (dict, eval),
-    'float': (float, float),
-    'int': (int, int),
-    'list': (list, eval),
-    'tuple': (tuple, eval),
-    'string': (str, str),
-}
-
-
-OPTIONS = dict(
-    (key, TYPES_TO_OBJ[opt.type])
-    for key, opt in defaults.flatten(defaults.NAMESPACES)
+celery_app.user_options['preload'].add(
+    Option('-i', '--ini',
+           help='Paste ini configuration file.'),
 )
 
 
-def convert_celery_options(config):
-    """
-    Converts celery options to apropriate types
-    """
+def setup_app(registry):
+    if 'celery.config' in registry.settings:
+        config_path = registry.settings['celery.config']
+    else:
+        config_path = 'celeryconfig'
 
-    for key, value in config.items():
-        opt_type = OPTIONS.get(key)
-        if opt_type:
-            if opt_type[0] == str:
-                clean_quoted_config(config, key)
-            elif opt_type[0] is object:
-                try:
-                    config[key] = eval(value)
-                except:
-                    pass  # any can be anything; even a string
-            elif not isinstance(value, opt_type[0]):
-                config[key] = opt_type[1](value)
+    celery_app.config_from_object(config_path)
+    celery_app.conf.update({'PYRAMID_REGISTRY': registry})
+
+@signals.user_preload_options.connect
+def on_preload_parsed(options, **kwargs):
+    ini_location = options['ini']
+    if isinstance(ini_location, tuple) and ini_location[0] == 'NO':
+        print('You must provide the paste --ini argument')
+        exit(-1)
+
+    env = bootstrap(ini_location)
+    registry = env['registry']
+    setup_app(registry)
 
 
 def includeme(config):
-    convert_celery_options(config.registry.settings)
-    celery.add_defaults(config.registry.settings)
-    # delete cached property in order to get them reloaded from the new conf
-    del(celery.backend)
-    for name, task in registry.tasks.items():
-        # ensure that every already registed tasks doens use an unconfigured
-        # backend.
-        task.backend = celery.backend
+    setup_app(config.registry)

@@ -10,11 +10,9 @@ or by calling config.include('pyramid_celery').
 Now you can either use class based:
 
 ``` python
-from celery.task import task
-from celery.task import Task
+from pyramid_celery import celery_app as app
 
-@task
-class AddTask(Task):
+class AddTask(app.Task):
     def run(self, x, y):
         print x+y
 ```
@@ -22,29 +20,30 @@ class AddTask(Task):
 or decorator based:
 
 ``` python
-from celery.task import task
+from pyramid_celery import celery_app as app
 
-@task
+@app.task
 def add(x, y):
     print x+y
 ```
 
+To get pyramid settings you may access them in app.conf['PYRAMID_REGISTRY'].
+
 Configuration
 =====================
-All standard celery configuration options will work. Check out http://ask.github.com/celery/configuration.html
+You should use the standard `celeryconfig` python settings, you can get more
+information here:
+
+http://celery.readthedocs.org/en/latest/configuration.html
+
 
 Demo
 =====================
-To see it all in action check out pyramid_celery_demo, run rabbitmq-server and then do:
+To see it all in action check out examples/long_running_with_tm, run redis-server and then do:
 
 ``` python
 $ python setup.py develop
-$ populate_pyramid_celery_demo ./development.ini
+$ populate_long_running_with_tm development.ini
 $ pserve ./development.ini
-$ pcelery ./development.ini worker
-```
-
-If you are using celery < 3.1 use  older celery command lines binding.
-``` python
-pceleryd development.ini
+$ celery worker -A pyramid_celery.celery_app --ini development.ini
 ```
