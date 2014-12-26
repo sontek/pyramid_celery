@@ -3,29 +3,30 @@ Getting Started
 Include pyramid_celery either by setting your includes in your .ini,
 or by calling config.include('pyramid_celery').
 
-``` python
+.. code-block:: python
+
     pyramid.includes = pyramid_celery
-```
+
 
 Now you can either use class based:
 
-``` python
-from pyramid_celery import celery_app as app
+.. code-block:: python
 
-class AddTask(app.Task):
-    def run(self, x, y):
-        print x+y
-```
+    from pyramid_celery import celery_app as app
+
+    class AddTask(app.Task):
+        def run(self, x, y):
+            print x+y
 
 or decorator based:
 
-``` python
-from pyramid_celery import celery_app as app
+.. code-block:: python
 
-@app.task
-def add(x, y):
-    print x+y
-```
+    from pyramid_celery import celery_app as app
+
+    @app.task
+    def add(x, y):
+        print x+y
 
 To get pyramid settings you may access them in app.conf['PYRAMID_REGISTRY'].
 
@@ -41,9 +42,9 @@ Demo
 =====================
 To see it all in action check out examples/long_running_with_tm, run redis-server and then do:
 
-``` python
-$ python setup.py develop
-$ populate_long_running_with_tm development.ini
-$ pserve ./development.ini
-$ celery worker -A pyramid_celery.celery_app --ini development.ini
-```
+.. code-block::
+
+    $ python setup.py develop
+    $ populate_long_running_with_tm development.ini
+    $ pserve ./development.ini
+    $ celery worker -A pyramid_celery.celery_app --ini development.ini
