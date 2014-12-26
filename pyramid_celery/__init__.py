@@ -22,6 +22,7 @@ def setup_app(registry):
     celery_app.config_from_object(config_path)
     celery_app.conf.update({'PYRAMID_REGISTRY': registry})
 
+
 @signals.user_preload_options.connect
 def on_preload_parsed(options, **kwargs):
     ini_location = options['ini']
