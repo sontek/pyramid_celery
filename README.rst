@@ -1,7 +1,7 @@
 Getting Started
 =====================
 Include pyramid_celery either by setting your includes in your .ini,
-or by calling config.include('pyramid_celery').
+or by calling config.include('pyramid_celery'):
 
 .. code-block:: python
 
@@ -40,7 +40,8 @@ http://celery.readthedocs.org/en/latest/configuration.html
 
 Demo
 =====================
-To see it all in action check out examples/long_running_with_tm, run redis-server and then do:
+To see it all in action check out examples/long_running_with_tm, run
+redis-server and then do:
 
 .. code-block::
 
