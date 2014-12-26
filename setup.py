@@ -12,18 +12,18 @@ if sys.version_info < (2, 7):
 
 
 setup(name='pyramid_celery',
-      version='2.0.0a1',
+      version='2.0.0-rc1',
       description='Celery integration with pyramid',
-      long_description=README + '\n\n' +  CHANGES,
+      long_description=README + '\n\n' + CHANGES,
       classifiers=[
-            'Development Status :: 4 - Beta',
-            'Environment :: Web Environment',
-            'Intended Audience :: Developers',
-            'License :: OSI Approved :: BSD License',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python',
-            'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-            'Topic :: Software Development :: Libraries :: Python Modules'
+          'Development Status :: 4 - Beta',
+          'Environment :: Web Environment',
+          'Intended Audience :: Developers',
+          'License :: OSI Approved :: BSD License',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python',
+          'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+          'Topic :: Software Development :: Libraries :: Python Modules'
       ],
       author='John Anderson',
       author_email='sontek@gmail.com',
