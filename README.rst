@@ -1,5 +1,8 @@
 Getting Started
 =====================
+.. image:: https://travis-ci.org/sontek/pyramid_celery.png?branch=master
+        :target: https://travis-ci.org/sontek/pyramid_celery
+
 Include pyramid_celery either by setting your includes in your .ini,
 or by calling **config.include('pyramid_celery')**:
 
