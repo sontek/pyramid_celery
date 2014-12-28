@@ -102,7 +102,7 @@ Demo
 To see it all in action check out examples/long_running_with_tm, run
 redis-server and then do:
 
-.. code-block::
+.. code-block:: bash
 
     $ python setup.py develop
     $ populate_long_running_with_tm development.ini
