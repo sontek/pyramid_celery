@@ -113,6 +113,9 @@ the *--ini-var* argument, which is a comma separated list of key value pairs:
 
     celery worker -A pyramid_celery.celery_app --ini development.ini --ini-var=database_username=sontek,database_password=OhYeah!
 
+The values in *ini-var* cannot have spaces in them, this will break celery's
+parser.
+
 The reason it is a csv instead of using *--ini-var* multiple times is because of
 a bug in celery itself.  When they fix the bug we will re-work the API. Ticket
 is here:
