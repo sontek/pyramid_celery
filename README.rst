@@ -66,33 +66,27 @@ An example ini configuration looks like this:
 
     [celery]
     BROKER_URL = redis://localhost:1337/0
-    CELERY_IMPORTS = myapp.tasks
-                     otherapp.tasks
-    CELERY_RESULT_BACKEND = sqlite:///celery_results.db
-    CELERY_RESULT_SERIALIZER = json
+    CELERY_IMPORTS = app1.tasks
+                     app2.tasks
 
     [celerybeat:task1]
-    # Execute every hour
-    task = myapp.tasks.Task1
+    task = app1.tasks.Task1
     type = crontab
     schedule = {"minute": 0}
 
     [celerybeat:task2]
-    # Execute every 30 seconds
-    task = myapp.tasks.Task2
+    task = app1.tasks.Task2
     type = timedelta
     schedule = {"seconds": 30}
     args = [16, 16]
 
     [celerybeat:task3]
-    # Execute at midnight
-    task = otherapp.tasks.Task3
+    task = app2.tasks.Task1
     type = crontab
     schedule = {"hour": 0, "minute": 0}
     kwargs = {"boom": "shaka"}
 
     [celerybeat:task4]
-    # Every 30 seconds
     task = myapp.tasks.Task4
     type = integer
     schedule = 30
