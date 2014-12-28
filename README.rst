@@ -39,17 +39,17 @@ To get pyramid settings you may access them in app.conf['PYRAMID_REGISTRY'].
 
 Configuration
 =====================
-By default `pyramid_celery` assumes you want to configure celery via an ini
-settings. You can do this by calling `config.configure_celery('development.ini')`
-but if you are already in the `main` of your application and want to use the ini
+By default **pyramid_celery** assumes you want to configure celery via an ini
+settings. You can do this by calling **config.configure_celery('development.ini')**
+but if you are already in the **main** of your application and want to use the ini
 used to configure the app you can do the following:
 
 .. code-block:: python
 
     config.configure_celery(global_config['__file__'])
 
-If you want to use the standard `celeryconfig` python file you can set the
-`USE_CELERYCONFIG = True` like this:
+If you want to use the standard **celeryconfig** python file you can set the
+**USE_CELERYCONFIG = True** like this:
 
 .. code-block:: ini
 
