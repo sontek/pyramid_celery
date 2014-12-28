@@ -1,7 +1,7 @@
 from celery import Celery
 from celery import signals
 from celery.bin import Option
-
+from optparse import make_option
 from pyramid.paster import bootstrap
 from pyramid_celery.loaders import INILoader
 from pyramid.settings import asbool
@@ -10,8 +10,17 @@ celery_app = Celery()
 
 
 celery_app.user_options['preload'].add(
-    Option('-i', '--ini',
-           help='Paste ini configuration file.'),
+    make_option(
+        '-i', '--ini',
+        default=None,
+        help='Paste ini configuration file.'),
+)
+
+celery_app.user_options['preload'].add(
+    make_option(
+        '--ini-var',
+        default=None,
+        help='Comma separated list of key=value to pass to ini'),
 )
 
 
@@ -31,12 +40,22 @@ def setup_app(registry, ini_location):
 @signals.user_preload_options.connect
 def on_preload_parsed(options, **kwargs):
     ini_location = options['ini']
+    ini_vars = options['ini_var']
 
-    if isinstance(ini_location, tuple) and ini_location[0] == 'NO':
+    if ini_location is None:
         print('You must provide the paste --ini argument')
         exit(-1)
 
-    env = bootstrap(ini_location)
+    options = {}
+    if ini_vars is not None:
+        for pairs in ini_vars.split(','):
+            key, value = pairs.split('=')
+            options[key] = value
+
+        env = bootstrap(ini_location, options=options)
+    else:
+        env = bootstrap(ini_location)
+
     registry = env['registry']
     setup_app(registry, ini_location)
 

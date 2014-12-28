@@ -50,7 +50,8 @@ def test_includeme_use_celeryconfig():
 def test_preload_no_ini():
     from pyramid_celery import on_preload_parsed
     options = {
-        'ini': ('NO', 'DEFAULT'),
+        'ini': None,
+        'ini_var': None,
     }
 
     with pytest.raises(SystemExit):
@@ -61,7 +62,8 @@ def test_preload_no_ini():
 def test_preload_ini():
     from pyramid_celery import on_preload_parsed
     options = {
-        'ini': 'tests/configs/dev.ini'
+        'ini': 'tests/configs/dev.ini',
+        'ini_var': None,
     }
 
     with mock.patch('pyramid_celery.bootstrap') as boot:
@@ -85,3 +87,16 @@ def test_celery_imports():
         'myapp.tasks',
         'otherapp.tasks'
     ]
+
+@pytest.mark.unit
+def test_preload_with_ini_vars():
+    from pyramid_celery import on_preload_parsed
+    options = {
+        'ini': 'tests/configs/dev.ini',
+        'ini_var': 'database=foo,password=bar',
+    }
+
+    with mock.patch('pyramid_celery.bootstrap') as boot:
+        on_preload_parsed(options)
+        expected_vars = {'database': 'foo', 'password': 'bar'}
+        assert boot.called_with('dev.ini', expected_vars)

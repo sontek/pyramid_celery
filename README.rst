@@ -97,6 +97,29 @@ An example ini configuration looks like this:
     type = integer
     schedule = 30
 
+Running the worker
+=============================
+To run the worker we just use the standard celery command with an additional
+argument:
+
+.. code-block:: bash
+
+    celery worker -A pyramid_celery.celery_app --ini development.ini
+
+If you've defined variables in your .ini like %(database_username)s you can use
+the *--ini-var* argument, which is a comma separated list of key value pairs:
+
+.. code-block:: bash
+
+    celery worker -A pyramid_celery.celery_app --ini development.ini --ini-var=database_username=sontek,database_password=OhYeah!
+
+The reason it is a csv instead of using *--ini-var* multiple times is because of
+a bug in celery itself.  When they fix the bug we will re-work the API. Ticket
+is here:
+
+https://github.com/celery/celery/pull/2435
+
+
 Demo
 =====================
 To see it all in action check out examples/long_running_with_tm, run
