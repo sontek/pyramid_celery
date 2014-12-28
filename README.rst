@@ -6,6 +6,9 @@ Getting Started
 .. image:: https://coveralls.io/repos/sontek/pyramid_celery/badge.png?branch=master
            :target: https://coveralls.io/r/sontek/pyramid_celery?branch=master
 
+.. image:: https://img.shields.io/pypi/v/pyramid_celery.svg
+           :target: https://pypi.python.org/pypi/pyramid_celery
+
 Include pyramid_celery either by setting your includes in your .ini,
 or by calling **config.include('pyramid_celery')**:
 
