@@ -41,3 +41,22 @@ def test_bad_ini():
 
     msg = 'schedule type sundial in section celerybeat:task1 is invalid'
     assert str(e.value) == msg
+
+
+@pytest.mark.unit
+def test_bad_json():
+    from pyramid_celery import celery_app
+    from pyramid_celery.loaders import INILoader
+    from pyramid.exceptions import ConfigurationError
+    ini_path = os.path.join(here, 'tests/configs/bad_json.ini')
+    loader = INILoader(celery_app, ini_file=ini_path)
+
+    with pytest.raises(ConfigurationError) as e:
+        loader.read_configuration()
+
+    msg = (
+        'The schedule={"seconds": 60*60*60} is not valid json in section '
+        'celerybeat:task1'
+    )
+
+    assert str(e.value) == msg

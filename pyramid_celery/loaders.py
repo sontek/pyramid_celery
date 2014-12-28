@@ -22,12 +22,25 @@ SCHEDULE_TYPE_MAP = {
 }
 
 
+def safe_json(get, section, key):
+    try:
+        value = get(key)
+        json_value = json.loads(value)
+    except ValueError:
+        msg = 'The %s=%s is not valid json in section %s' % (
+            key, value, section
+        )
+        raise ConfigurationError(msg)
+
+    return json_value
+
+
 def get_beat_config(parser, section):
     get = partial(parser.get, section)
     has_option = partial(parser.has_option, section)
 
     schedule_type = get('type')
-    schedule_value = json.loads(get('schedule'))
+    schedule_value = safe_json(get, section, 'schedule')
 
     scheduler_cls = SCHEDULE_TYPE_MAP.get(schedule_type)
 
@@ -47,10 +60,10 @@ def get_beat_config(parser, section):
     }
 
     if has_option('args'):
-        config['args'] = json.loads(get('args'))
+        config['args'] = safe_json(get, section, 'args')
 
     if has_option('kwargs'):
-        config['kwargs'] = json.loads(get('kwargs'))
+        config['kwargs'] = safe_json(get, section, 'kwargs')
 
     return config
 
