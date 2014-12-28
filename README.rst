@@ -56,7 +56,7 @@ If you want to use the standard `celeryconfig` python file you can set the
     [celery]
     USE_CELERYCONFIG = True
 
-Yyou can get more information for celeryconfig.py here:
+You can get more information for celeryconfig.py here:
 
 http://celery.readthedocs.org/en/latest/configuration.html
 
