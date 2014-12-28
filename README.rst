@@ -125,6 +125,13 @@ is here:
 
 https://github.com/celery/celery/pull/2435
 
+If you use celerybeat scheduler you need to run with the *-B* flag to run
+beat and worker at the same time or you can launch it separately like this:
+
+.. code-block:: bash
+
+    celery beat -A pyramid_celery.celery_app --ini development.ini
+
 
 Demo
 =====================
