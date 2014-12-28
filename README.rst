@@ -1,7 +1,7 @@
 Getting Started
 =====================
 Include pyramid_celery either by setting your includes in your .ini,
-or by calling config.include('pyramid_celery'):
+or by calling **config.include('pyramid_celery')**:
 
 .. code-block:: python
 
