@@ -3,6 +3,7 @@ import json
 import celery.loaders.base
 import celery.schedules
 from pyramid.compat import configparser
+from pyramid.exceptions import ConfigurationError
 from functools import partial
 
 
@@ -47,8 +48,11 @@ class INILoader(celery.loaders.base.BaseLoader):
             elif schedule_type == 'integer':
                 schedule = int(schedule_value)
             else:
-                raise RuntimeError(
-                    'No valid schedule type found in %s' % section
+                raise ConfigurationError(
+                    'schedule type %s in section %s is invalid' % (
+                        schedule_type,
+                        section
+                    )
                 )
 
             task_config = {
