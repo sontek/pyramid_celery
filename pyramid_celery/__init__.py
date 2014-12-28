@@ -1,6 +1,5 @@
 from celery import Celery
 from celery import signals
-from celery.bin import Option
 from optparse import make_option
 from pyramid.paster import bootstrap
 from pyramid_celery.loaders import INILoader

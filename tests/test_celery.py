@@ -88,6 +88,7 @@ def test_celery_imports():
         'otherapp.tasks'
     ]
 
+
 @pytest.mark.unit
 def test_preload_with_ini_vars():
     from pyramid_celery import on_preload_parsed
