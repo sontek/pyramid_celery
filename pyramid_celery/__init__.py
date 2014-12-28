@@ -23,7 +23,7 @@ def setup_app(registry, ini_location):
         config_path = 'celeryconfig'
         celery_app.config_from_object(config_path)
     else:
-        celery_app.conf.update(celery_config)
+        celery_app.config_from_object(celery_config)
 
     celery_app.conf.update({'PYRAMID_REGISTRY': registry})
 
