@@ -8,7 +8,7 @@ or by calling **config.include('pyramid_celery')**:
     pyramid.includes = pyramid_celery
 
 
-Then you just need to tell `pyramid_celery` what ini file your `[celery]`
+Then you just need to tell **pyramid_celery** what ini file your **[celery]**
 section is in:
 
 .. code-block:: python
