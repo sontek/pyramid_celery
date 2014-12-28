@@ -1,6 +1,10 @@
 import pyramid_celery
+import pytest
+
 from celery import Celery
 
 
-def pytest_runtest_setup(item):
-    pyramid_celery.celery_app = Celery()
+@pytest.fixture(autouse=True)
+def setup_celery_app(monkeypatch):
+    app = Celery()
+    monkeypatch.setattr(pyramid_celery, 'celery_app', app)

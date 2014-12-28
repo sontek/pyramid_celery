@@ -66,7 +66,8 @@ An example ini configuration looks like this:
 
     [celery]
     BROKER_URL = redis://localhost:1337/0
-    CELERY_IMPORTS = myapp.tasks, otherapp.tasks
+    CELERY_IMPORTS = myapp.tasks
+                     otherapp.tasks
     CELERY_RESULT_BACKEND = sqlite:///celery_results.db
     CELERY_RESULT_SERIALIZER = json
 

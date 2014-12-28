@@ -67,3 +67,21 @@ def test_preload_ini():
     with mock.patch('pyramid_celery.bootstrap') as boot:
         on_preload_parsed(options)
         assert boot.called_with('dev.ini')
+
+
+@pytest.mark.unit
+def test_celery_imports():
+    from pyramid_celery import includeme, celery_app
+    from pyramid import testing
+    from pyramid.registry import Registry
+    config = testing.setUp()
+    config.registry = Registry()
+    config.registry.settings = {}
+
+    includeme(config)
+    config.configure_celery('tests/configs/imports.ini')
+
+    assert celery_app.conf['CELERY_IMPORTS'] == [
+        'myapp.tasks',
+        'otherapp.tasks'
+    ]

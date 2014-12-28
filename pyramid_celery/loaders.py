@@ -3,41 +3,43 @@ import json
 import celery.loaders.base
 import celery.schedules
 from pyramid.compat import configparser
+from functools import partial
 
 
 class INILoader(celery.loaders.base.BaseLoader):
+    ConfigParser = configparser.SafeConfigParser
 
     def __init__(self, app, **kwargs):
         self.celery_conf = kwargs.pop('ini_file')
+        self.parser = self.ConfigParser()
         super(INILoader, self).__init__(app, **kwargs)
 
     def read_configuration(self, fail_silently=True):
-        config = configparser.SafeConfigParser()
-        config.read(self.celery_conf)
+        self.parser.read(self.celery_conf)
 
-        # Read main celery config
-        config_dict = dict(
-            [(key.upper(), value) for key, value in config.items('celery')]
-        )
+        config_dict = {}
 
-        # Conversions
+        for key, value in self.parser.items('celery'):
+            config_dict[key.upper()] = value
+
         if 'CELERY_IMPORTS' in config_dict:
-            split_imports = config_dict['CELERY_IMPORTS'].split(',')
+            split_imports = config_dict['CELERY_IMPORTS'].split()
             config_dict['CELERY_IMPORTS'] = split_imports
 
-        # Explicitly tell celery to not hijack root logger since we
-        # allow configuring our own own logger
-        # config_dict['CELERYD_HIJACK_ROOT_LOGGER'] = False
-
-        # Read celery beat config
         beat_config = {}
-        beat_sections = [
-            c for c in config.sections() if c.startswith('celerybeat:')
-        ]
+        beat_sections = []
+
+        for section in self.parser.sections():
+            if section.startswith('celerybeat:'):
+                beat_sections.append(section)
 
         for section in beat_sections:
-            schedule_type = config.get(section, 'type')
-            schedule_value = json.loads(config.get(section, 'schedule'))
+            get = partial(self.parser.get, section)
+            has_option = partial(self.parser.has_option, section)
+
+            schedule_type = get('type')
+            schedule_value = json.loads(get('schedule'))
+
             if schedule_type == 'crontab':
                 schedule = celery.schedules.crontab(**schedule_value)
             elif schedule_type == 'timedelta':
@@ -50,21 +52,20 @@ class INILoader(celery.loaders.base.BaseLoader):
                 )
 
             task_config = {
-                'task': config.get(section, 'task'),
+                'task': get('task'),
                 'schedule': schedule,
             }
 
-            if config.has_option(section, 'args'):
-                task_config['args'] = json.loads(config.get(section, 'args'))
+            if has_option('args'):
+                task_config['args'] = json.loads(get('args'))
 
-            if config.has_option(section, 'kwargs'):
-                task_config['kwargs'] = json.loads(
-                    config.get(section, 'kwargs')
-                )
+            if has_option('kwargs'):
+                task_config['kwargs'] = json.loads(get('kwargs'))
 
             name = section.split(':', 1)[1]
             beat_config[name] = task_config
 
-        config_dict['CELERYBEAT_SCHEDULE'] = beat_config
+        if beat_config:
+            config_dict['CELERYBEAT_SCHEDULE'] = beat_config
 
         return config_dict
