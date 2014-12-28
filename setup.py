@@ -14,7 +14,7 @@ if sys.version_info < (2, 7):
 setup(name='pyramid_celery',
       version='2.0.0-rc2',
       description='Celery integration with pyramid',
-      long_description=README + '\n\n' + CHANGES,
+      long_description=README,
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Web Environment',
@@ -36,13 +36,4 @@ setup(name='pyramid_celery',
       install_requires=requires,
       tests_require=requires + ['pytest', 'mock'],
       test_suite="pyramid_celery",
-      entry_points="""\
-        [console_scripts]
-        pcelery = pyramid_celery.commands.celery:main
-        # keep for compatibility
-        pceleryd = pyramid_celery.commands.celeryd:main
-        pceleryctl = pyramid_celery.commands.celeryctl:main
-        pcelerybeat = pyramid_celery.commands.celerybeat:main
-        pceleryev = pyramid_celery.commands.celeryev:main
-        """
       )
