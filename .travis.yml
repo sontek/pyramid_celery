@@ -8,7 +8,7 @@ env:
   - TOXENV=flake8
 
 install:
-  - travis_retry pip install tox
+  - travis_retry pip install tox coveralls
 
 script:
   - travis_retry tox
