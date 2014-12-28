@@ -47,3 +47,4 @@ docs/_build
 # Pytest
 coverage.xml
 junit.xml
+*celerybeat-schedule*
