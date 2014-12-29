@@ -10,9 +10,9 @@ Getting Started
            :target: https://pypi.python.org/pypi/pyramid_celery
 
 Include pyramid_celery either by setting your includes in your .ini,
-or by calling **config.include('pyramid_celery')**:
+or by calling ``config.include('pyramid_celery')``:
 
-.. code-block:: python
+.. code-block:: ini
 
     pyramid.includes = pyramid_celery
 
@@ -44,7 +44,7 @@ or decorator based:
     def add(x, y):
         print x+y
 
-To get pyramid settings you may access them in app.conf['PYRAMID_REGISTRY'].
+To get pyramid settings you may access them in ``app.conf['PYRAMID_REGISTRY']``.
 
 Configuration
 =====================
