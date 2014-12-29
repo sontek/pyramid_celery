@@ -101,3 +101,24 @@ def test_preload_with_ini_vars():
         on_preload_parsed(options)
         expected_vars = {'database': 'foo', 'password': 'bar'}
         assert boot.called_with('dev.ini', expected_vars)
+
+
+@pytest.mark.unit
+def test_ini_logging():
+    from celery import signals
+    from pyramid_celery import includeme
+    from pyramid import testing
+    from pyramid.registry import Registry
+    config = testing.setUp()
+    config.registry = Registry()
+    config.registry.settings = {}
+    includeme(config)
+    config.configure_celery('tests/configs/dev.ini')
+
+    with mock.patch('pyramid_celery.setup_logging') as setup_logging:
+        signals.setup_logging.send(
+            sender=None, loglevel='INFO', logfile=None,
+            format='', colorize=False,
+        )
+
+    assert setup_logging.called_with('tests/configs/dev.ini')

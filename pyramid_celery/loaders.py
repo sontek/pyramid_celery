@@ -4,6 +4,7 @@ import celery.loaders.base
 import celery.schedules
 from pyramid.compat import configparser
 from pyramid.exceptions import ConfigurationError
+
 from functools import partial
 
 
@@ -74,6 +75,7 @@ class INILoader(celery.loaders.base.BaseLoader):
     def __init__(self, app, **kwargs):
         self.celery_conf = kwargs.pop('ini_file')
         self.parser = self.ConfigParser()
+
         super(INILoader, self).__init__(app, **kwargs)
 
     def read_configuration(self, fail_silently=True):

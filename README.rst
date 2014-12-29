@@ -132,6 +132,14 @@ beat and worker at the same time or you can launch it separately like this:
 
     celery beat -A pyramid_celery.celery_app --ini development.ini
 
+Logging
+=====================
+If you use the **.ini** configuration (i.e don't use celeryconfig.py) then the
+logging configuration will be loaded from the .ini and will not use the default
+celery loggers.
+
+If you want use the default celery loggers then you can set
+**CELERYD_HIJACK_ROOT_LOGGER=True** in the [celery] section of your .ini
 
 Demo
 =====================
