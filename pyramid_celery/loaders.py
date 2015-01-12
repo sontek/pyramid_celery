@@ -86,9 +86,12 @@ class INILoader(celery.loaders.base.BaseLoader):
         for key, value in self.parser.items('celery'):
             config_dict[key.upper()] = value
 
-        if 'CELERY_IMPORTS' in config_dict:
-            split_imports = config_dict['CELERY_IMPORTS'].split()
-            config_dict['CELERY_IMPORTS'] = split_imports
+        list_settings = ['CELERY_IMPORTS', 'CELERY_ACCEPT_CONTENT']
+
+        for setting in list_settings:
+            if setting in config_dict:
+                split_setting = config_dict[setting].split()
+                config_dict[setting] = split_setting
 
         beat_config = {}
 

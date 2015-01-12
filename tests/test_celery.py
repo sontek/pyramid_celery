@@ -122,3 +122,21 @@ def test_ini_logging():
         )
 
     assert setup_logging.called_with('tests/configs/dev.ini')
+
+
+@pytest.mark.unit
+def test_celery_accept_content():
+    from pyramid_celery import includeme, celery_app
+    from pyramid import testing
+    from pyramid.registry import Registry
+    config = testing.setUp()
+    config.registry = Registry()
+    config.registry.settings = {}
+
+    includeme(config)
+    config.configure_celery('tests/configs/dev.ini')
+
+    assert celery_app.conf['CELERY_ACCEPT_CONTENT'] == [
+        'json',
+        'xml'
+    ]
