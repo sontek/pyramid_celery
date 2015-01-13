@@ -83,6 +83,27 @@ An example ini configuration looks like this:
     type = crontab
     schedule = {"minute": 0}
 
+Scheduled/Periodic Tasks
+-----------------------------
+To use celerybeat (periodic tasks) you need to declare 1 ``celerybeat`` config
+section per task. The options are:
+
+* ``task`` - The python task you need executed.
+* ``type`` - The type of scheduling your configuration uses, options are
+             ``crontab``, ``timedelta``, and ``integer``.
+* ``schedule`` - The actual schedule for your ``type`` of configuration.
+* ``args`` - Additional positional arguments.
+* ``kwargs`` - Additional keyword arguments.
+
+Example configuration for this:
+
+.. code-block:: ini
+
+    [celerybeat:task1]
+    task = app1.tasks.Task1
+    type = crontab
+    schedule = {"minute": 0}
+
     [celerybeat:task2]
     task = app1.tasks.Task2
     type = timedelta
@@ -99,6 +120,23 @@ An example ini configuration looks like this:
     task = myapp.tasks.Task4
     type = integer
     schedule = 30
+
+Routing
+-----------------------------
+If you would like to route a task to a specific queue you can define a route
+per task by declaring their ``queue`` and/or ``routing_key`` in a
+``celeryroute`` section.
+
+An example configuration for this:
+
+.. code-block:: ini
+
+    [celeryroute:otherapp.tasks.Task3]
+    queue = slow_tasks
+    routing_key = turtle
+
+    [celeryroute:myapp.tasks.Task1]
+    queue = fast_tasks
 
 Running the worker
 =============================

@@ -69,6 +69,20 @@ def get_beat_config(parser, section):
     return config
 
 
+def get_route_config(parser, section):
+    get = partial(parser.get, section)
+    has_option = partial(parser.has_option, section)
+
+    config = {
+        'queue': get('queue')
+    }
+
+    if has_option('routing_key'):
+        config['routing_key'] = get('routing_key')
+
+    return config
+
+
 class INILoader(celery.loaders.base.BaseLoader):
     ConfigParser = configparser.SafeConfigParser
 
@@ -94,15 +108,20 @@ class INILoader(celery.loaders.base.BaseLoader):
                 config_dict[setting] = split_setting
 
         beat_config = {}
+        route_config = {}
 
         for section in self.parser.sections():
-            if not section.startswith('celerybeat:'):
-                continue
-
-            name = section.split(':', 1)[1]
-            beat_config[name] = get_beat_config(self.parser, section)
+            if section.startswith('celerybeat:'):
+                name = section.split(':', 1)[1]
+                beat_config[name] = get_beat_config(self.parser, section)
+            elif section.startswith('celeryroute:'):
+                name = section.split(':', 1)[1]
+                route_config[name] = get_route_config(self.parser, section)
 
         if beat_config:
             config_dict['CELERYBEAT_SCHEDULE'] = beat_config
+
+        if route_config:
+            config_dict['CELERY_ROUTES'] = route_config
 
         return config_dict

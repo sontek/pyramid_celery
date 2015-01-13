@@ -60,3 +60,18 @@ def test_bad_json():
     )
 
     assert str(e.value) == msg
+
+
+@pytest.mark.unit
+def test_celery_routing():
+    from pyramid_celery import celery_app
+    from pyramid_celery.loaders import INILoader
+
+    ini_path = os.path.join(here, 'tests/configs/routing.ini')
+    loader = INILoader(celery_app, ini_file=ini_path)
+    result = loader.read_configuration()
+    routes = result['CELERY_ROUTES']
+
+    assert result['BROKER_URL'] == 'redis://localhost:1337/0'
+    assert routes['myapp.tasks.Task1']['queue'] == 'fast_tasks'
+    assert routes['otherapp.tasks.Task3']['queue'] == 'slow_tasks'
