@@ -90,7 +90,7 @@ section per task. The options are:
 
 - **task** - The python task you need executed.
 - **type** - The type of scheduling your configuration uses, options are
-  **crontab**, ``timedelta``, and ``integer``.
+  ``crontab``, ``timedelta``, and ``integer``.
 - **schedule** - The actual schedule for your ``type`` of configuration.
 - **args** - Additional positional arguments.
 - **kwargs** - Additional keyword arguments.
