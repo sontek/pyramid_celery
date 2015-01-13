@@ -176,6 +176,17 @@ If you use the **.ini** configuration (i.e don't use celeryconfig.py) then the
 logging configuration will be loaded from the .ini and will not use the default
 celery loggers.
 
+You most likely want to add a logging section to your ini for celery as well:
+
+.. code-block:: ini
+
+    [logger_celery]
+    level = INFO
+    handlers =
+    qualname = celery
+
+and then update your ``[loggers]`` section to include it.
+
 If you want use the default celery loggers then you can set
 **CELERYD_HIJACK_ROOT_LOGGER=True** in the [celery] section of your .ini
 
