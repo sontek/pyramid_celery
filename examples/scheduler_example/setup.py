@@ -10,8 +10,9 @@ with open(os.path.join(here, 'README.rst')) as f:
 requires = [
     'pyramid',
     'pyramid_celery',
+    'pyramid_debugtoolbar',
     'redis',
-    'watiress',
+    'waitress',
 ]
 
 setup(name='scheduler_example',
