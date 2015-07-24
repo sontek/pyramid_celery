@@ -136,6 +136,22 @@ If you need to find out what timezones are available you can do the following:
     from pytz import all_timezones
     pprint(all_timezones)
 
+Worker Execution
+----------------
+The celerybeat worker will read your configuration and schedule tasks in the
+queue to be executed at the time defined.  This means if you are using
+celerybeat you will end up running *2* workers:
+
+.. code-block:: bash
+
+    $ celery worker -A pyramid_celery.celery_app --ini development.ini
+    $ celery beat -A pyramid_celery.celery_app --ini development.ini
+
+The first command is the standard worker command that will read messages off
+of the queue and run the task. The second command will read the celerybeat
+configuration and periodically schedule tasks on the queue.
+
+
 Routing
 -----------------------------
 If you would like to route a task to a specific queue you can define a route
