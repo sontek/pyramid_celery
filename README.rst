@@ -194,8 +194,14 @@ is here:
 
 https://github.com/celery/celery/pull/2435
 
-If you use celerybeat scheduler you need to run with the *-B* flag to run
-beat and worker at the same time or you can launch it separately like this:
+If you use celerybeat scheduler you need to run with the *--beat* flag to run
+beat and the worker at the same time.
+
+.. code-block:: bash
+
+    celery worker --beat -A pyramid_celery.celery_app --ini development.ini
+
+Or you can launch it separately like this:
 
 .. code-block:: bash
 
