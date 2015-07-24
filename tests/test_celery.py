@@ -14,6 +14,7 @@ def test_includeme_custom_config():
     includeme(config)
     config.configure_celery('tests/configs/dev.ini')
     assert celery_app.conf['BROKER_URL'] == 'redis://localhost:1337/0'
+    assert celery_app.conf['CELERY_TIMEZONE'] == 'America/Los_Angeles'
 
 
 @pytest.mark.unit
