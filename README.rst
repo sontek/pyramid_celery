@@ -121,6 +121,21 @@ Example configuration for this:
     type = integer
     schedule = 30
 
+A gotcha you want to watchout for is that the date/time in scheduled tasks
+is UTC by default.  If you want to schedule for an exact date/time for your
+local timezone you need to set ``CELERY_TIMEZONE``.  Documentation for that
+can be found here:
+
+http://celery.readthedocs.org/en/latest/userguide/periodic-tasks.html#time-zones
+
+If you need to find out what timezones are available you can do the following:
+
+.. code-block:: python
+
+    from pprint import pprint
+    from pytz import all_timezones
+    pprint(all_timezones)
+
 Routing
 -----------------------------
 If you would like to route a task to a specific queue you can define a route
