@@ -188,6 +188,25 @@ You most likely want to add a logging section to your ini for celery as well:
 and then update your ``[loggers]`` section to include it.
 
 If you want use the default celery loggers then you can set
+**CELERYD_HIJACK_ROOT_LOGGER=True** in the [celery] section of your .ini.
+
+Celery worker processes do not propagade exceptions inside tasks, but swallow them 
+silently by default. This is related to the behavior of reading asynchronous 
+task results back. To see if your tasks fail you might need to configure 
+``celery.worker.job`` logger to propagate exceptions:
+
+.. code-block:: ini
+
+    # Make sure Celery worker doesn't silently swallow exceptions
+    # See http://stackoverflow.com/a/20719461/315168 
+    # https://github.com/celery/celery/issues/2437
+    [logger_celery_worker_job]
+    level = ERROR
+    handlers = 
+    qualname = celery.worker.job
+    propagate = 1
+
+If you want use the default celery loggers then you can set
 **CELERYD_HIJACK_ROOT_LOGGER=True** in the [celery] section of your .ini
 
 Demo
