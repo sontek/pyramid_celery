@@ -107,6 +107,15 @@ class INILoader(celery.loaders.base.BaseLoader):
                 split_setting = config_dict[setting].split()
                 config_dict[setting] = split_setting
 
+        # handle admin configuration as a JSON blob
+        if 'ADMINS' in config_dict:
+            try:
+                config_dict['ADMINS'] = json.loads(config_dict['ADMINS'])
+            except ValueError:
+                msg = 'The ADMINS property must be a JSON representation of the Celery ADMIN property.'
+                raise ConfigurationError(msg)
+
+
         beat_config = {}
         route_config = {}
 
