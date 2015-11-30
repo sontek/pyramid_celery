@@ -25,6 +25,17 @@ celery_app.user_options['preload'].add(
 ini_file = None
 
 
+def boolify(config, *names):
+    """Make config variables boolean.
+
+    Celery wants ``False`` instead of ``"false"`` for CELERY_ALWAYS_EAGER.
+    """
+
+    for n in names:
+        if n in config:
+            config[n] = asbool(config[n])
+
+
 def configure_logging(*args, **kwargs):
     setup_logging(ini_file)
 
@@ -32,6 +43,9 @@ def configure_logging(*args, **kwargs):
 def setup_app(registry, ini_location):
     loader = INILoader(celery_app, ini_file=ini_location)
     celery_config = loader.read_configuration()
+
+    #: TODO: There might be other variables requiring special handling
+    boolify(celery_config, 'CELERY_ALWAYS_EAGER', 'CELERY_ENABLE_UTC', 'CELERY_RESULT_PERSISTENT')
 
     if asbool(celery_config.get('USE_CELERYCONFIG', False)) is True:
         config_path = 'celeryconfig'
