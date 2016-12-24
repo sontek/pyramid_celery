@@ -53,7 +53,10 @@ def setup_app(registry, ini_location):
     celery_config = loader.read_configuration()
 
     #: TODO: There might be other variables requiring special handling
-    boolify(celery_config, 'CELERY_ALWAYS_EAGER', 'CELERY_ENABLE_UTC', 'CELERY_RESULT_PERSISTENT')
+    boolify(
+        celery_config, 'CELERY_ALWAYS_EAGER', 'CELERY_ENABLE_UTC',
+        'CELERY_RESULT_PERSISTENT'
+    )
 
     if asbool(celery_config.get('USE_CELERYCONFIG', False)) is True:
         config_path = 'celeryconfig'
