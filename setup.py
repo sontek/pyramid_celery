@@ -13,9 +13,9 @@ if sys.version_info < (2, 7):
 
 
 setup(name='pyramid_celery',
-      version='2.0.0',
+      version='3.0.0',
       description='Celery integration with pyramid',
-      long_description=README,
+      long_description=README + "\n" + CHANGES,
       classifiers=[
           "Development Status :: 5 - Production/Stable",
           "Intended Audience :: Developers",

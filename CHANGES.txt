@@ -1,0 +1,6 @@
+3.0.0
+================
+
+- Support celery 4.0
+- Properly handle CELERY_ALWAYS_EAGER
+- Handle tuple in ADMINS
