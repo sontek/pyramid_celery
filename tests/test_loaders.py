@@ -17,6 +17,9 @@ def test_basic_ini():
     schedule = result['CELERYBEAT_SCHEDULE']
 
     assert result['BROKER_URL'] == 'redis://localhost:1337/0'
+    assert result['ADMINS'] == [
+        ('john', 'john@initrode.example'),
+        ('exceptions', 'exceptions@majortech.example')]
     assert schedule['task1']['task'] == 'myapp.tasks.Task1'
     assert schedule['task2']['task'] == 'myapp.tasks.Task2'
     assert schedule['task3']['task'] == 'otherapp.tasks.Task3'

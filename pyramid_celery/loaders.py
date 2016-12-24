@@ -107,6 +107,14 @@ class INILoader(celery.loaders.base.BaseLoader):
                 split_setting = config_dict[setting].split()
                 config_dict[setting] = split_setting
 
+        tuple_list_settings = ['ADMINS']
+
+        for setting in tuple_list_settings:
+            if setting in config_dict:
+                items = config_dict[setting].split()
+                tuple_settings = [tuple(item.split(',')) for item in items]
+                config_dict[setting] = tuple_settings
+
         beat_config = {}
         route_config = {}
 
