@@ -9,7 +9,8 @@ requires = [
     'pyramid_celery',
     'zope.sqlalchemy',
     'redis',
-    'psycopg2'
+    'psycopg2',
+    'pyramid_mako',
 ]
 
 setup(name='long_running_with_tm',
