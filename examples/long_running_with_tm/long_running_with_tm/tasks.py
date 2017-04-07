@@ -11,12 +11,20 @@ import time
 import random
 
 
-class DeleteTask(app.Task):
-    def run(self, task_pk):
+class BaseDeleteTask(app.Task):
+    """
+    Base class providing methods for task model delete
+    """
+    def delete_method(self, task_pk):
         print('deleting task! %s' % task_pk)
         task = DBSession.query(TaskItem).filter(TaskItem.id == task_pk)[0]
         DBSession.delete(task)
         transaction.commit()
+
+
+@app.task(bind=True, base=BaseDeleteTask)
+def delete_task(self, task_pk):
+    self.delete_method(task_pk)
 
 
 @app.task

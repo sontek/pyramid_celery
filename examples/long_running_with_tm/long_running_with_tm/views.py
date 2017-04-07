@@ -7,7 +7,7 @@ from .models import (
 )
 
 from .tasks import (
-    DeleteTask,
+    delete_task,
     add_task
 )
 
@@ -19,7 +19,7 @@ def index(request):
     return {'tasks': tasks }
 
 @view_config(route_name='add_task')
-def create_task(request):
+def create_task_view(request):
     task_val = request.POST['task']
     add_task.delay(task_val)
     time.sleep(1)
@@ -27,8 +27,8 @@ def create_task(request):
     return HTTPFound(request.route_url('index'))
 
 @view_config(route_name='delete_task')
-def delete_task(request):
+def delete_task_view(request):
     task_pk = request.matchdict['task_pk']
-    DeleteTask().delay(task_pk)
+    delete_task.delay(task_pk)
     time.sleep(1)
     return HTTPFound(request.route_url('index'))
