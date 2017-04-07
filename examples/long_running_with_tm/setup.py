@@ -8,7 +8,7 @@ requires = [
     'pyramid_debugtoolbar',
     'pyramid_celery',
     'zope.sqlalchemy',
-    'redis',
+    'redis>=2.10.5',
     'psycopg2',
     'pyramid_mako',
 ]
