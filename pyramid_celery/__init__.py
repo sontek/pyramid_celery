@@ -93,14 +93,19 @@ def on_preload_parsed(options, **kwargs):
         exit(-1)
 
     options = {}
-    if ini_vars is not None:
-        for pairs in ini_vars.split(','):
-            key, value = pairs.split('=')
-            options[key] = value
+    try:
+        if ini_vars is not None:
+            for pairs in ini_vars.split(','):
+                key, value = pairs.split('=')
+                options[key] = value
 
-        env = bootstrap(ini_location, options=options)
-    else:
-        env = bootstrap(ini_location)
+            env = bootstrap(ini_location, options=options)
+        else:
+            env = bootstrap(ini_location)
+    except:
+        import traceback
+        traceback.print_exc()
+        exit(-1)
 
     registry = env['registry']
     app = env['app']
