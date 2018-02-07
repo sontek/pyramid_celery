@@ -73,6 +73,17 @@ def test_preload_ini():
 
 
 @pytest.mark.unit
+def test_preload_bad_ini():
+    from pyramid_celery import on_preload_parsed
+    options = {
+        'ini': 'tests/configs/bad.ini',
+        'ini_var': None,
+    }
+    with pytest.raises(SystemExit):
+        on_preload_parsed(options)
+
+
+@pytest.mark.unit
 def test_celery_imports():
     from pyramid_celery import includeme, celery_app
     from pyramid import testing
