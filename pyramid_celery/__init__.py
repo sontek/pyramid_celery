@@ -102,7 +102,7 @@ def on_preload_parsed(options, **kwargs):
             env = bootstrap(ini_location, options=options)
         else:
             env = bootstrap(ini_location)
-    except:
+    except Exception:
         import traceback
         traceback.print_exc()
         exit(-1)
