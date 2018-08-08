@@ -67,7 +67,7 @@ If you want to use the standard **celeryconfig** python file you can set the
 
 You can get more information for celeryconfig.py here:
 
-http://celery.readthedocs.org/en/latest/configuration.html
+http://celery.readthedocs.io/en/latest/userguide/configuration.html
 
 An example ini configuration looks like this:
 
