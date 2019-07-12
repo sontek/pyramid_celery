@@ -1,17 +1,24 @@
 language: python
 sudo: false
 
+python:
+  - '2.7'
+  - '3.4'
+  - '3.5'
+  - '3.6'
+  - '3.7'
+  - pypy
+
 env:
-  - TOXENV=py27
-  - TOXENV=py34
-  - TOXENV=pypy
-  - TOXENV=flake8
+  - CELERY='<4'
+  - CELERY='>=4'
 
 install:
-  - travis_retry pip install tox coveralls
+  - pip install .
+  - pip install celery$CELERY
 
 script:
-  - travis_retry tox
+  - pytest --cov=pyramid_celery --cov-report= --cov-append
 
 after_success:
   - coveralls
