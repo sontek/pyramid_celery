@@ -8,10 +8,11 @@ python:
   - pypy
 
 install:
-  - pip install codecov tox-travis
+  - pip install tox-travis codecov coveralls
 
 script:
   - tox
 
 after_success:
   - codecov
+  - coveralls
