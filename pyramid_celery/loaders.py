@@ -4,8 +4,23 @@ import celery.loaders.base
 import celery.schedules
 from pyramid.compat import configparser
 from pyramid.exceptions import ConfigurationError
+from pyramid.settings import asbool
 
 from functools import partial
+
+
+def get_any(dict_, keys, default=None):
+    for key in keys:
+        try:
+            return dict_[key]
+        except KeyError:
+            pass
+    return default
+
+
+def set_all(dict_, keys, value):
+    for key in keys:
+        dict_[key] = value
 
 
 def crontab(value):
@@ -84,30 +99,43 @@ def get_route_config(parser, section):
 
 
 class INILoader(celery.loaders.base.BaseLoader):
-    ConfigParser = configparser.SafeConfigParser
-
     def __init__(self, app, **kwargs):
         self.celery_conf = kwargs.pop('ini_file')
-        self.parser = self.ConfigParser()
+        self.parser = configparser.SafeConfigParser()
+        self.parser.optionxform = str
 
         super(INILoader, self).__init__(app, **kwargs)
 
     def read_configuration(self, fail_silently=True):
         self.parser.read(self.celery_conf)
+        config_dict = dict(self.parser.items('celery'))
 
-        config_dict = {}
+        #: TODO: There might be other variables requiring special handling
+        bool_settings = [
+            'always_eager', 'CELERY_ALWAYS_EAGER',
+            'enable_utc', 'CELERY_ENABLE_UTC',
+            'result_persistent', 'CELERY_RESULT_PERSISTENT',
+            'worker_hijack_root_logger', 'CELERYD_HIJACK_ROOT_LOGGER',
+            'use_celeryconfig', 'USE_CELERYCONFIG',
+        ]
 
-        for key, value in self.parser.items('celery'):
-            config_dict[key.upper()] = value
+        for setting in bool_settings:
+            if setting in config_dict:
+                config_dict[setting] = asbool(config_dict[setting])
 
-        list_settings = ['CELERY_IMPORTS', 'CELERY_ACCEPT_CONTENT']
+        list_settings = [
+            'imports', 'CELERY_IMPORTS',
+            'accept_content', 'CELERY_ACCEPT_CONTENT',
+        ]
 
         for setting in list_settings:
             if setting in config_dict:
                 split_setting = config_dict[setting].split()
                 config_dict[setting] = split_setting
 
-        tuple_list_settings = ['ADMINS']
+        tuple_list_settings = [
+            'admins', 'ADMINS',
+        ]
 
         for setting in tuple_list_settings:
             if setting in config_dict:
@@ -127,9 +155,11 @@ class INILoader(celery.loaders.base.BaseLoader):
                 route_config[name] = get_route_config(self.parser, section)
 
         if beat_config:
-            config_dict['CELERYBEAT_SCHEDULE'] = beat_config
+            set_all(config_dict, (
+                'beat_schedule', 'CELERYBEAT_SCHEDULE'), beat_config)
 
         if route_config:
-            config_dict['CELERY_ROUTES'] = route_config
+            set_all(config_dict, (
+                'task_routes', 'CELERY_ROUTES'), route_config)
 
         return config_dict
