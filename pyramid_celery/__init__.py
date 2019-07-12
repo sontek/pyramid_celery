@@ -17,18 +17,23 @@ def add_preload_arguments(parser):
     )
 
 
-celery_app = Celery()
-if celery_version.major > 3:
-    celery_app.user_options['preload'].add(add_preload_arguments)
-else:
-    celery_app.user_options['preload'].add(Option(
-        '-i', '--ini', default=None,
-        help='Paste ini configuration file.'
-    ))
-    celery_app.user_options['preload'].add(Option(
-        '--ini-var', default=None,
-        help='Comma separated list of key=value to pass to ini.'
-    ))
+def make_app():
+    app = Celery()
+    if celery_version.major > 3:
+        app.user_options['preload'].add(add_preload_arguments)
+    else:
+        app.user_options['preload'].add(Option(
+            '-i', '--ini', default=None,
+            help='Paste ini configuration file.'
+        ))
+        app.user_options['preload'].add(Option(
+            '--ini-var', default=None,
+            help='Comma separated list of key=value to pass to ini.'
+        ))
+    return app
+
+
+celery_app = make_app()
 ini_file = None
 
 
