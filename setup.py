@@ -7,7 +7,6 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = ['pyramid', 'celery']
-
 if sys.version_info < (2, 7):
     requires.append('argparse')
 
@@ -40,6 +39,7 @@ setup(name='pyramid_celery',
       include_package_data=True,
       zip_safe=False,
       install_requires=requires,
-      tests_require=requires + ['pytest', 'mock'],
-      test_suite="pyramid_celery",
+      extras_require={
+          'dev': ['tox']
+      }
       )

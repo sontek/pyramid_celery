@@ -1,4 +1,0 @@
-pyramid
-celery
-pytest
-mock
