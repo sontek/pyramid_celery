@@ -1,7 +1,7 @@
 # Getting Started
 
-[![image](https://travis-ci.org/aarki/pyramid_celery.png?branch=master)](https://travis-ci.org/aarki/pyramid_celery)
-[![image](https://codecov.io/gh/aarki/pyramid_celery/branch/master/graph/badge.svg)](https://codecov.io/gh/aarki/pyramid_celery)
+[![image](https://img.shields.io/travis/aarki/pyramid_celery/master.svg)](https://travis-ci.org/aarki/pyramid_celery)
+[![image](https://img.shields.io/codecov/c/gh/aarki/pyramid_celery/master.svg)](https://codecov.io/gh/aarki/pyramid_celery)
 
 Include `pyramid_celery`, either in your `.ini`:
 
