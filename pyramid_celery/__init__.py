@@ -12,7 +12,7 @@ def add_preload_arguments(parser):
         help='Paste ini configuration file.'
     )
     parser.add_argument(
-        '--ini-var', default=None,
+        '--ini-var', default=None, action='append',
         help='Comma separated list of key=value to pass to ini.'
     )
 
@@ -27,7 +27,7 @@ def make_app():
             help='Paste ini configuration file.'
         ))
         app.user_options['preload'].add(Option(
-            '--ini-var', default=None,
+            '--ini-var', default=None, action='append',
             help='Comma separated list of key=value to pass to ini.'
         ))
     return app
@@ -81,8 +81,8 @@ def on_preload_parsed(options, **kwargs):
         exit(-1)
 
     options = {}
-    if ini_vars is not None:
-        for pairs in ini_vars.split(','):
+    if ini_vars:
+        for pairs in ini_vars:
             key, value = pairs.split('=')
             options[key] = value
 

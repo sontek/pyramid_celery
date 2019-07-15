@@ -82,6 +82,14 @@ def test_preload_options():
         cmd.setup_app_from_commandline(['--ini', 'tests/configs/dev.ini'])
         boot.assert_called_with('tests/configs/dev.ini')
 
+    with mock.patch('pyramid_celery.bootstrap') as boot:
+        cmd = Command(celery_app)
+        cmd.setup_app_from_commandline([
+            '--ini', 'tests/configs/dev.ini',
+            '--ini-var', 'foo=bar',
+            '--ini-var=bar=baz',
+        ])
+
 
 @pytest.mark.unit
 def test_celery_imports():
@@ -106,7 +114,7 @@ def test_preload_with_ini_vars():
     from pyramid_celery import on_preload_parsed
     options = {
         'ini': 'tests/configs/dev.ini',
-        'ini_var': 'database=foo,password=bar',
+        'ini_var': ['database=foo', 'password=bar'],
     }
 
     with mock.patch('pyramid_celery.bootstrap') as boot:

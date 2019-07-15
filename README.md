@@ -186,15 +186,11 @@ the `--ini-var` option, and pass a comma-separated list of key-value
 pairs.
 
 ``` bash
-celery worker -A pyramid_celery.celery_app --ini development.ini --ini-var=database_username=sontek,database_password=OhYeah!
+celery worker -A pyramid_celery.celery_app \
+    --ini development.ini \
+    --ini-var database_username=sontek \
+    --ini-var database_password=OhYeah!
 ```
-
-The `--ini-var` values cannot contain spaces, as this will break
-command-line argument parsing.
-
-Using `--ini-var` multiple times is not supported, due to a bug in
-Celery. The issue can be tracked <span class="title-ref">here
-\<https://github.com/celery/celery/pull/2435/\></span>.
 
 # Logging
 
