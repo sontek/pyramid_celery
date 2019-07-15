@@ -4,7 +4,7 @@ Getting Started
            :target: https://travis-ci.org/aarki/pyramid_celery
 
 .. image:: https://codecov.io/gh/aarki/pyramid_celery/branch/master/graph/badge.svg
-           :target: https://codecov.io/gh/aarki/project-name)
+           :target: https://codecov.io/gh/aarki/pyramid_celery
 
 Include ``pyramid_celery``, either in your ``.ini``:
 
