@@ -12,7 +12,7 @@ if sys.version_info < (2, 7):
 
 
 setup(name='pyramid_celery',
-      version='3.0.0',
+      version='4.0.0',
       description='Celery integration with pyramid',
       long_description=README + "\n" + CHANGES,
       classifiers=[
