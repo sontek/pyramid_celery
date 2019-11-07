@@ -1,3 +1,9 @@
+4.1.0
+================
+
+- Prevent duplicate calls to setup_app.
+
+
 4.0.0
 ================
 
