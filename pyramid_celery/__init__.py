@@ -41,7 +41,7 @@ def configure_logging(*args, **kwargs):
     setup_logging(ini_file)
 
 
-def setup_app(app, root, request, registry, closer, ini_location):
+def setup_app(ini_location):
     loader = INILoader(celery_app, ini_file=ini_location)
     celery_config = loader.read_configuration()
 
@@ -59,6 +59,8 @@ def setup_app(app, root, request, registry, closer, ini_location):
 
         celery_app.config_from_object(celery_config)
 
+
+def update_app(app=None, root=None, request=None, registry=None, closer=None):
     # include custom pyramid_* settings
     pyramid_conf = (
         ('pyramid_app', app),
@@ -95,18 +97,11 @@ def on_preload_parsed(options, **kwargs):
     root = env['root']
     request = env['request']
     closer = env['closer']
-    setup_app(app, root, request, registry, closer, ini_location)
+    update_app(app, root, request, registry, closer)
 
 
 def configure(config, ini_location):
-    setup_app(
-        None,
-        None,
-        None,
-        config.registry,
-        None,
-        ini_location
-    )
+    setup_app(ini_location)
 
 
 def includeme(config):
