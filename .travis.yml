@@ -1,12 +1,6 @@
 language: python
 sudo: false
 
-python:
-  - "2.7"
-  - "3.4"
-  - "3.6"
-  - "pypy"
-
 jobs:
   include:
     - python: 2.7
