@@ -227,7 +227,7 @@ and then update your ``[loggers]`` section to include it.
 If you want use the default celery loggers then you can set
 **CELERYD_HIJACK_ROOT_LOGGER=True** in the [celery] section of your .ini.
 
-Celery worker processes do not propagade exceptions inside tasks, but swallow them 
+Celery worker processes do not propagate exceptions inside tasks, but swallow them 
 silently by default. This is related to the behavior of reading asynchronous 
 task results back. To see if your tasks fail you might need to configure 
 ``celery.worker.job`` logger to propagate exceptions:
