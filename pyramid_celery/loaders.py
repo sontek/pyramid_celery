@@ -143,6 +143,19 @@ class INILoader(celery.loaders.base.BaseLoader):
                 tuple_settings = [tuple(item.split(',')) for item in items]
                 config_dict[setting] = tuple_settings
 
+        dict_settings = [
+            'broker_transport_options', 'BROKER_TRANSPORT_OPTIONS',
+        ]
+
+        for setting in dict_settings:
+            if setting in config_dict:
+                try:
+                    value = json.loads(config_dict[setting])
+                except ValueError:
+                    value = config_dict[setting].strip().split()
+                    value = dict(pair.split('=') for pair in value)
+                config_dict[setting] = value
+
         beat_config = {}
         route_config = {}
 
