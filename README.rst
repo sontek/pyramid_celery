@@ -1,3 +1,8 @@
+DEPRECATED
+==========
+
+This repository is no longer maintained and this is only here as a temporary work around until we are able to remove it from our project.
+
 Getting Started
 =====================
 .. image:: https://travis-ci.org/sontek/pyramid_celery.png?branch=master
