@@ -106,6 +106,12 @@ class INILoader(celery.loaders.base.BaseLoader):
             if setting in config_dict:
                 split_setting = config_dict[setting].split()
                 config_dict[setting] = split_setting
+        
+        dict_settings = ['BROKER_TRANSPORT_OPTIONS']
+
+        for setting in dict_settings:
+            if setting in config_dict:
+                config_dict[setting] = json.loads(config_dict[setting])
 
         tuple_list_settings = ['ADMINS']
 
