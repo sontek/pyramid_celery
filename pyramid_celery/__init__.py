@@ -1,7 +1,12 @@
 from celery import Celery
 from celery import signals
 from celery import VERSION as celery_version
-from celery.bin import Option
+
+try:
+    from celery.bin.base import Option
+except ImportError:
+    pass
+
 from pyramid.paster import bootstrap, setup_logging
 from pyramid_celery.loaders import INILoader
 from pyramid.settings import asbool
