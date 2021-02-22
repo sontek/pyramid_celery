@@ -11,8 +11,8 @@ jobs:
       env: TOX_ENV=py37
     - python: 3.8
       env: TOX_ENV=py38
-    - python: pypy
-      env: TOX_ENV=pypy
+    - python: py39
+      env: TOX_ENV=py39
     - python: pypy3
       env: TOX_ENV=pypy3
 
