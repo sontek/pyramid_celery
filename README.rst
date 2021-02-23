@@ -78,10 +78,17 @@ An example ini configuration looks like this:
     imports = app1.tasks
               app2.tasks
 
+    [celery:broker_transport_options]
+    visibility_timeout = 18000
+    max_retries = 5
+
     [celerybeat:task1]
     task = app1.tasks.Task1
     type = crontab
     schedule = {"minute": 0}
+
+You'll notice the configuration options that are dictionaries or have
+multiple values will be split into their own sections.
 
 Scheduled/Periodic Tasks
 -----------------------------
