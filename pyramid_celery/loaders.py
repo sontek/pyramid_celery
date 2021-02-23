@@ -107,7 +107,7 @@ class INILoader(celery.loaders.base.BaseLoader):
                 split_setting = config_dict[setting].split()
                 config_dict[setting] = split_setting
                 
-        dict_settings = ['BROKER_TRANSPORT_OPTIONS']
+        dict_settings = ['broker_transport_options']
 
         for setting in dict_settings:
             if setting in config_dict:
