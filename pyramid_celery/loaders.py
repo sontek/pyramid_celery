@@ -139,7 +139,6 @@ class INILoader(celery.loaders.base.BaseLoader):
         if beat_config:
             config_dict['beat_schedule'] = beat_config
 
-
         if route_config:
             config_dict['task_routes'] = route_config
 
