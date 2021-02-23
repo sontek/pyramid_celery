@@ -67,12 +67,17 @@ def setup_app(app, root, request, registry, closer, ini_location):
         config_path = 'celeryconfig'
         celery_app.config_from_object(config_path)
     else:
+        if celery_version.major < 4:
+            hijack_key = 'CELERYD_HIJACK_ROOT_LOGGER'
+        else:
+            hijack_key = 'worker_hijack_root_logger'
+
         # TODO: Couldn't find a way with celery to do this
         hijack_logger = asbool(
-            celery_config.get('CELERYD_HIJACK_ROOT_LOGGER', False)
+            celery_config.get(hijack_key, False)
         )
 
-        celery_config['CELERYD_HIJACK_ROOT_LOGGER'] = hijack_logger
+        celery_config[hijack_key] = hijack_logger
 
         if hijack_logger is False:
             global ini_file
@@ -98,14 +103,19 @@ def on_preload_parsed(options, **kwargs):
         exit(-1)
 
     options = {}
-    if ini_vars is not None:
-        for pairs in ini_vars.split(','):
-            key, value = pairs.split('=')
-            options[key] = value
+    try:
+        if ini_vars is not None:
+            for pairs in ini_vars.split(','):
+                key, value = pairs.split('=')
+                options[key] = value
 
-        env = bootstrap(ini_location, options=options)
-    else:
-        env = bootstrap(ini_location)
+            env = bootstrap(ini_location, options=options)
+        else:
+            env = bootstrap(ini_location)
+    except:
+        import traceback
+        traceback.print_exc()
+        exit(-1)
 
     registry = env['registry']
     app = env['app']
