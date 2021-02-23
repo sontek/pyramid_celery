@@ -2,3 +2,4 @@ pyramid
 celery
 pytest
 mock
+six

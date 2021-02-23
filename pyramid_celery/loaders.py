@@ -3,7 +3,7 @@ import json
 import celery.loaders.base
 import celery.schedules
 from celery import VERSION as celery_version
-from pyramid.compat import configparser
+from six.moves import configparser
 from pyramid.exceptions import ConfigurationError
 
 from functools import partial
@@ -99,21 +99,25 @@ class INILoader(celery.loaders.base.BaseLoader):
         config_dict = {}
 
         for key, value in self.parser.items('celery'):
-            if celery_version.major < 4:
-                key = key.upper()
             config_dict[key] = value
 
-        if celery_version.major < 4:
-            list_settings = ['CELERY_IMPORTS', 'CELERY_ACCEPT_CONTENT']
-        else:
-            list_settings = ['imports', 'accept_content']
+        if celery_version.major > 6:
+            # TODO: Check for invalid settings
+            # that won't be accepted by celery.
+            pass
+
+        list_settings = [
+            'imports',
+            'include',
+            'accept_content',
+        ]
 
         for setting in list_settings:
             if setting in config_dict:
                 split_setting = config_dict[setting].split()
                 config_dict[setting] = split_setting
 
-        tuple_list_settings = ['ADMINS']
+        tuple_list_settings = ['admins']
 
         for setting in tuple_list_settings:
             if setting in config_dict:
@@ -133,16 +137,10 @@ class INILoader(celery.loaders.base.BaseLoader):
                 route_config[name] = get_route_config(self.parser, section)
 
         if beat_config:
-            if celery_version.major < 4:
-                config_dict['CELERYBEAT_SCHEDULE'] = beat_config
-            else:
-                config_dict['beat_schedule'] = beat_config
+            config_dict['beat_schedule'] = beat_config
 
 
         if route_config:
-            if celery_version.major < 4:
-                config_dict['CELERY_ROUTES'] = route_config
-            else:
-                config_dict['task_routes'] = route_config
+            config_dict['task_routes'] = route_config
 
         return config_dict

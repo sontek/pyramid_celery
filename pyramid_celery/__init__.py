@@ -56,21 +56,19 @@ def configure_logging(*args, **kwargs):
 def setup_app(app, root, request, registry, closer, ini_location):
     loader = INILoader(celery_app, ini_file=ini_location)
     celery_config = loader.read_configuration()
-
     #: TODO: There might be other variables requiring special handling
     boolify(
-        celery_config, 'CELERY_ALWAYS_EAGER', 'CELERY_ENABLE_UTC',
-        'CELERY_RESULT_PERSISTENT'
+        celery_config,
+        'task_always_eager',
+        'enable_utc',
+        'result_persistent',
     )
 
-    if asbool(celery_config.get('USE_CELERYCONFIG', False)) is True:
+    if asbool(celery_config.get('use_celeryconfig', False)) is True:
         config_path = 'celeryconfig'
         celery_app.config_from_object(config_path)
     else:
-        if celery_version.major < 4:
-            hijack_key = 'CELERYD_HIJACK_ROOT_LOGGER'
-        else:
-            hijack_key = 'worker_hijack_root_logger'
+        hijack_key = 'worker_hijack_root_logger'
 
         # TODO: Couldn't find a way with celery to do this
         hijack_logger = asbool(

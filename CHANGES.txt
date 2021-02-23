@@ -1,3 +1,12 @@
+4.0.0
+================
+- Drop support for celery 3.0
+- Error out if ini is misconfigured
+- Add support for pyramid2
+- Add support for celery v5
+- Drop support for old CELERY config options,
+  use only the lower case versions.
+
 3.0.0
 ================
 

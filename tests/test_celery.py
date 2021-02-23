@@ -13,8 +13,8 @@ def test_includeme_custom_config():
     config.registry.settings = {}
     includeme(config)
     config.configure_celery('tests/configs/dev.ini')
-    assert celery_app.conf['BROKER_URL'] == 'redis://localhost:1337/0'
-    assert celery_app.conf['CELERY_TIMEZONE'] == 'America/Los_Angeles'
+    assert celery_app.conf['broker_url'] == 'redis://localhost:1337/0'
+    assert celery_app.conf['timezone'] == 'America/Los_Angeles'
 
 
 @pytest.mark.unit
@@ -44,7 +44,7 @@ def test_includeme_use_celeryconfig():
     includeme(config)
     config.configure_celery('tests/configs/useceleryconfig.ini')
 
-    assert celery_app.conf['BROKER_URL'] == 'redis://localhost:1337/0'
+    assert celery_app.conf['broker_url'] == 'redis://localhost:1337/0'
 
 
 @pytest.mark.unit
@@ -84,7 +84,7 @@ def test_celery_imports():
     includeme(config)
     config.configure_celery('tests/configs/imports.ini')
 
-    assert celery_app.conf['CELERY_IMPORTS'] == [
+    assert celery_app.conf['imports'] == [
         'myapp.tasks',
         'otherapp.tasks'
     ]
@@ -136,8 +136,8 @@ def test_celery_accept_content():
 
     includeme(config)
     config.configure_celery('tests/configs/dev.ini')
-
-    assert celery_app.conf['CELERY_ACCEPT_CONTENT'] == [
+    assert celery_app.conf['accept_content'] == [
         'json',
-        'xml'
+        'xml',
+        'yaml',
     ]
