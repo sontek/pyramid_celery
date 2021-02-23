@@ -15,6 +15,10 @@ def test_includeme_custom_config():
     config.configure_celery('tests/configs/dev.ini')
     assert celery_app.conf['broker_url'] == 'redis://localhost:1337/0'
     assert celery_app.conf['timezone'] == 'America/Los_Angeles'
+    assert celery_app.conf['broker_transport_options'] == {
+        'visibility_timeout': 18000,
+        'max_retries': 5,
+    }
 
 
 @pytest.mark.unit
