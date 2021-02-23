@@ -8,10 +8,6 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = ['pyramid', 'celery']
 
-if sys.version_info < (2, 7):
-    requires.append('argparse')
-
-
 setup(name='pyramid_celery',
       version='3.0.0',
       description='Celery integration with pyramid',
@@ -24,12 +20,13 @@ setup(name='pyramid_celery',
           "Operating System :: POSIX",
           "Operating System :: Microsoft :: Windows",
           "Programming Language :: Python",
-          "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: 3",
-          "Programming Language :: Python :: 3.3",
-          "Programming Language :: Python :: 3.4",
+          "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
           "Programming Language :: Python :: Implementation :: CPython",
-          "Programming Language :: Python :: Implementation :: PyPy",
+          "Programming Language :: Python :: Implementation :: PyPy3",
       ],
       author='John Anderson',
       author_email='sontek@gmail.com',
@@ -40,6 +37,7 @@ setup(name='pyramid_celery',
       include_package_data=True,
       zip_safe=False,
       install_requires=requires,
-      tests_require=requires + ['pytest', 'mock'],
+      tests_require=requires + ['pytest'],
+      python_requires='>=3.6',
       test_suite="pyramid_celery",
-      )
+)
