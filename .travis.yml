@@ -4,7 +4,7 @@ sudo: false
 
 jobs:
   include:
-    - python: 3.6
+    - python: 3.9
       env: TOX_ENV=flake8
     - python: 3.6
       env: TOX_ENV=py36
@@ -16,6 +16,10 @@ jobs:
       env: TOX_ENV=py39
     - python: pypy3
       env: TOX_ENV=pypy3
+    - python: 3.9
+      env: TOX_ENV=celery4
+    - python: 3.9
+      env: TOX_ENV=celery5
 
 install:
   - travis_retry pip install tox coveralls
