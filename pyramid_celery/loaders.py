@@ -22,6 +22,10 @@ SCHEDULE_TYPE_MAP = {
     'timedelta': timedelta,
     'integer': int
 }
+BROKER_TRANSPORT_OPTIONS_MAP = {
+    'visibility_timeout': int,
+    'max_retries': int,
+}
 
 
 def safe_json(get, section, key):
@@ -127,14 +131,31 @@ class INILoader(celery.loaders.base.BaseLoader):
 
         beat_config = {}
         route_config = {}
+        dict_settings = [
+            'broker_transport_options',
+        ]
 
         for section in self.parser.sections():
+            sections = section.split(':', 1)
+            # [celery] -> name=celery
+            # [celery:options] -> name=options
+            # [celery:options:task] -> name=options:task
+
+            name = sections[0]
+            if len(sections) > 1:
+                name = sections[1]
+
             if section.startswith('celerybeat:'):
-                name = section.split(':', 1)[1]
                 beat_config[name] = get_beat_config(self.parser, section)
             elif section.startswith('celeryroute:'):
-                name = section.split(':', 1)[1]
                 route_config[name] = get_route_config(self.parser, section)
+            elif name in dict_settings:
+                options = {}
+                for key, value in self.parser.items(section):
+                    if key in BROKER_TRANSPORT_OPTIONS_MAP:
+                        options[key] = BROKER_TRANSPORT_OPTIONS_MAP[key](value)
+
+                config_dict[name] = options
 
         if beat_config:
             config_dict['beat_schedule'] = beat_config
