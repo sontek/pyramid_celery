@@ -14,10 +14,10 @@ def test_basic_ini():
     ini_path = os.path.join(here, 'tests/configs/dev.ini')
     loader = INILoader(celery_app, ini_file=ini_path)
     result = loader.read_configuration()
-    schedule = result['CELERYBEAT_SCHEDULE']
+    schedule = result['beat_schedule']
 
-    assert result['BROKER_URL'] == 'redis://localhost:1337/0'
-    assert result['ADMINS'] == [
+    assert result['broker_url'] == 'redis://localhost:1337/0'
+    assert result['admins'] == [
         ('john', 'john@initrode.example'),
         ('exceptions', 'exceptions@majortech.example')]
     assert schedule['task1']['task'] == 'myapp.tasks.Task1'
@@ -73,8 +73,8 @@ def test_celery_routing():
     ini_path = os.path.join(here, 'tests/configs/routing.ini')
     loader = INILoader(celery_app, ini_file=ini_path)
     result = loader.read_configuration()
-    routes = result['CELERY_ROUTES']
+    routes = result['task_routes']
 
-    assert result['BROKER_URL'] == 'redis://localhost:1337/0'
+    assert result['broker_url'] == 'redis://localhost:1337/0'
     assert routes['myapp.tasks.Task1']['queue'] == 'fast_tasks'
     assert routes['otherapp.tasks.Task3']['queue'] == 'slow_tasks'

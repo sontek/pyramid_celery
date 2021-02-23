@@ -1,7 +1,6 @@
 from celery import Celery
 from celery import signals
-from celery import VERSION as celery_version
-from celery.bin import Option
+
 from pyramid.paster import bootstrap, setup_logging
 from pyramid_celery.loaders import INILoader
 from pyramid.settings import asbool
@@ -19,17 +18,8 @@ def add_preload_arguments(parser):
 
 
 celery_app = Celery()
-if celery_version.major > 3:
-    celery_app.user_options['preload'].add(add_preload_arguments)
-else:
-    celery_app.user_options['preload'].add(Option(
-        '-i', '--ini', default=None,
-        help='Paste ini configuration file.'
-    ))
-    celery_app.user_options['preload'].add(Option(
-        '--ini-var', default=None,
-        help='Comma separated list of key=value to pass to ini.'
-    ))
+celery_app.user_options['preload'].add(add_preload_arguments)
+
 ini_file = None
 
 
@@ -51,23 +41,26 @@ def configure_logging(*args, **kwargs):
 def setup_app(app, root, request, registry, closer, ini_location):
     loader = INILoader(celery_app, ini_file=ini_location)
     celery_config = loader.read_configuration()
-
     #: TODO: There might be other variables requiring special handling
     boolify(
-        celery_config, 'CELERY_ALWAYS_EAGER', 'CELERY_ENABLE_UTC',
-        'CELERY_RESULT_PERSISTENT'
+        celery_config,
+        'task_always_eager',
+        'enable_utc',
+        'result_persistent',
     )
 
-    if asbool(celery_config.get('USE_CELERYCONFIG', False)) is True:
+    if asbool(celery_config.get('use_celeryconfig', False)) is True:
         config_path = 'celeryconfig'
         celery_app.config_from_object(config_path)
     else:
+        hijack_key = 'worker_hijack_root_logger'
+
         # TODO: Couldn't find a way with celery to do this
         hijack_logger = asbool(
-            celery_config.get('CELERYD_HIJACK_ROOT_LOGGER', False)
+            celery_config.get(hijack_key, False)
         )
 
-        celery_config['CELERYD_HIJACK_ROOT_LOGGER'] = hijack_logger
+        celery_config[hijack_key] = hijack_logger
 
         if hijack_logger is False:
             global ini_file
@@ -93,14 +86,19 @@ def on_preload_parsed(options, **kwargs):
         exit(-1)
 
     options = {}
-    if ini_vars is not None:
-        for pairs in ini_vars.split(','):
-            key, value = pairs.split('=')
-            options[key] = value
+    try:
+        if ini_vars is not None:
+            for pairs in ini_vars.split(','):
+                key, value = pairs.split('=')
+                options[key] = value
 
-        env = bootstrap(ini_location, options=options)
-    else:
-        env = bootstrap(ini_location)
+            env = bootstrap(ini_location, options=options)
+        else:
+            env = bootstrap(ini_location)
+    except:  # noqa
+        import traceback
+        traceback.print_exc()
+        exit(-1)
 
     registry = env['registry']
     app = env['app']
