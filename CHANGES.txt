@@ -1,11 +1,14 @@
 4.0.0
 ================
 - Drop support for celery 3.0
+- Drop support for Pyramid 2.7
 - Error out if ini is misconfigured
-- Add support for pyramid2
+- Add support for pyramid v2
 - Add support for celery v5
 - Drop support for old CELERY config options,
   use only the lower case versions.
+- Added support for `options` in celerybeat.
+- Added support for `broker_transport_options`
 
 3.0.0
 ================

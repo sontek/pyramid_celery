@@ -1,5 +1,6 @@
 from celery import Celery
 from celery import signals
+from celery import VERSION as celery_version
 
 from pyramid.paster import bootstrap, setup_logging
 from pyramid_celery.loaders import INILoader
@@ -18,7 +19,26 @@ def add_preload_arguments(parser):
 
 
 celery_app = Celery()
-celery_app.user_options['preload'].add(add_preload_arguments)
+if celery_version.major >= 5:
+    # Celery uses click in v5+
+    from click import Option
+    celery_app.user_options['preload'].add(
+        Option(
+            ('--ini', '-i',),
+            help='Paste ini configuration file.'
+        )
+    )
+    celery_app.user_options['preload'].add(
+        Option(
+            ('--ini-var',),
+            help='Comma separated list of key=value to pass to ini.'
+        )
+    )
+
+else:
+    celery_app.user_options['preload'].add(
+        add_preload_arguments
+    )
 
 ini_file = None
 

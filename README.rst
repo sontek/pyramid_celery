@@ -151,8 +151,8 @@ celerybeat you will end up running *2* workers:
 
 .. code-block:: bash
 
-    $ celery worker -A pyramid_celery.celery_app --ini development.ini
-    $ celery beat -A pyramid_celery.celery_app --ini development.ini
+    $ celery -A pyramid_celery.celery_app worker --ini development.ini
+    $ celery -A pyramid_celery.celery_app beat --ini development.ini
 
 The first command is the standard worker command that will read messages off
 of the queue and run the task. The second command will read the celerybeat

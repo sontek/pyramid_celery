@@ -9,7 +9,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = ['pyramid', 'celery']
 
 setup(name='pyramid_celery',
-      version='3.0.0',
+      version='4.0.0',
       description='Celery integration with pyramid',
       long_description=README + "\n" + CHANGES,
       classifiers=[

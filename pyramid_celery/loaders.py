@@ -2,8 +2,8 @@ import datetime
 import json
 import celery.loaders.base
 import celery.schedules
+import configparser
 from celery import VERSION as celery_version
-from six.moves import configparser
 from pyramid.exceptions import ConfigurationError
 
 from functools import partial
@@ -64,6 +64,9 @@ def get_beat_config(parser, section):
         'task': get('task'),
         'schedule': schedule,
     }
+
+    if has_option('options'):
+        config['options'] = safe_json(get, section, 'options')
 
     if has_option('args'):
         config['args'] = safe_json(get, section, 'args')

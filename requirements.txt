@@ -1,3 +1,2 @@
 pyramid
 celery
-six
