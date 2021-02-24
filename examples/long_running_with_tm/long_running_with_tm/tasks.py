@@ -30,7 +30,7 @@ def delete_task(self, task_pk):
 @app.task
 def add_task(task):
     time.sleep(random.choice([2, 4, 6, 8, 10]))
-    print 'creating task %s' % task
+    print('creating task %s' % task)
     task = TaskItem(task=task)
     DBSession.add(task)
     transaction.commit()
