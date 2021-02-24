@@ -65,6 +65,9 @@ def get_beat_config(parser, section):
         'schedule': schedule,
     }
 
+    if has_option('options'):
+        config['options'] = safe_json(get, section, 'options')
+
     if has_option('args'):
         config['args'] = safe_json(get, section, 'args')
 

@@ -27,6 +27,7 @@ def test_basic_ini():
     assert isinstance(schedule['task1']['schedule'], crontab)
     assert isinstance(schedule['task2']['schedule'], datetime.timedelta)
     assert isinstance(schedule['task4']['schedule'], int)
+    assert schedule['task1']['options'] == {'task_id': '4446'}
     assert schedule['task2']['args'] == [16, 16]
     assert schedule['task3']['kwargs'] == {"boom": "shaka"}
 
