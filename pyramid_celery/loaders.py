@@ -2,8 +2,8 @@ import datetime
 import json
 import celery.loaders.base
 import celery.schedules
+import configparser
 from celery import VERSION as celery_version
-from six.moves import configparser
 from pyramid.exceptions import ConfigurationError
 
 from functools import partial
