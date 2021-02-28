@@ -53,6 +53,22 @@ def test_includeme_use_celeryconfig():
 
 
 @pytest.mark.unit
+def test_includeme_use_custom_celeryconfig():
+    from pyramid_celery import includeme
+    from pyramid_celery import celery_app
+    from pyramid import testing
+    from pyramid.registry import Registry
+    config = testing.setUp()
+    config.registry = Registry()
+    config.registry.settings = {}
+
+    includeme(config)
+    config.configure_celery('tests/configs/custom_useceleryconfig.ini')
+
+    assert celery_app.conf['broker_url'] == 'redis://localhost:1337/1'
+
+
+@pytest.mark.unit
 def test_preload_no_ini():
     from pyramid_celery import on_preload_parsed
     options = {
