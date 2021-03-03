@@ -48,7 +48,7 @@ def configure_logging(*args, **kwargs):
     setup_logging(ini_file)
 
 
-def setup_app(app, root, request, registry, closer, ini_location):
+def setup_app(registry, ini_location, env=None):
     loader = INILoader(celery_app, ini_file=ini_location)
     celery_config = loader.read_configuration()
 
@@ -76,11 +76,12 @@ def setup_app(app, root, request, registry, closer, ini_location):
 
         celery_app.config_from_object(celery_config)
 
-    celery_app.conf.update({'PYRAMID_APP': app})
-    celery_app.conf.update({'PYRAMID_ROOT': root})
-    celery_app.conf.update({'PYRAMID_REQUEST': request})
     celery_app.conf.update({'PYRAMID_REGISTRY': registry})
-    celery_app.conf.update({'PYRAMID_CLOSER': closer})
+    if env:
+        celery_app.conf.update({'PYRAMID_APP': env['app']})
+        celery_app.conf.update({'PYRAMID_ROOT': env['root']})
+        celery_app.conf.update({'PYRAMID_REQUEST': env['request']})
+        celery_app.conf.update({'PYRAMID_CLOSER': env['closer']})
 
 
 @signals.user_preload_options.connect
@@ -103,20 +104,12 @@ def on_preload_parsed(options, **kwargs):
         env = bootstrap(ini_location)
 
     registry = env['registry']
-    app = env['app']
-    root = env['root']
-    request = env['request']
-    closer = env['closer']
-    setup_app(app, root, request, registry, closer, ini_location)
+    setup_app(registry, ini_location, env=env)
 
 
 def configure(config, ini_location):
     setup_app(
-        None,
-        None,
-        None,
         config.registry,
-        None,
         ini_location
     )
 
