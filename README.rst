@@ -64,6 +64,10 @@ If you want to use the standard **celeryconfig** python file you can set the
 
     [celery]
     use_celeryconfig = True
+    celery_config_module = my.custom.celeryconfig
+
+You may also suppress the **celery_config_module** directive to use the default
+`"celeryconfig"`
 
 You can get more information for celeryconfig.py here:
 
