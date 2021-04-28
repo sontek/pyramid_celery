@@ -92,7 +92,7 @@ def get_route_config(parser, section):
 
 
 class INILoader(celery.loaders.base.BaseLoader):
-    ConfigParser = configparser.SafeConfigParser
+    ConfigParser = configparser.ConfigParser
 
     def __init__(self, app, **kwargs):
         self.celery_conf = kwargs.pop('ini_file')
