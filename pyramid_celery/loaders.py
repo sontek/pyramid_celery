@@ -25,6 +25,7 @@ SCHEDULE_TYPE_MAP = {
 BROKER_TRANSPORT_OPTIONS_MAP = {
     'visibility_timeout': int,
     'max_retries': int,
+    'master_name': str,
 }
 
 
