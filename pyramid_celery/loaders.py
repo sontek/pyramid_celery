@@ -2,9 +2,9 @@ import datetime
 import json
 import celery.loaders.base
 import celery.schedules
+import logging
 from pyramid.compat import configparser
 from pyramid.exceptions import ConfigurationError
-from pyramid.settings import asbool
 
 from functools import partial
 
@@ -98,81 +98,110 @@ def get_route_config(parser, section):
     return config
 
 
+logging.basicConfig()
+
+logger = logging.getLogger(__name__)
+
+#: TODO: There might be other variables requiring special handling
+bool_settings = [
+    'always_eager', 'CELERY_ALWAYS_EAGER',
+    'enable_utc', 'CELERY_ENABLE_UTC',
+    'result_persistent', 'CELERY_RESULT_PERSISTENT',
+    'worker_hijack_root_logger', 'CELERYD_HIJACK_ROOT_LOGGER',
+    'use_celeryconfig', 'USE_CELERYCONFIG',
+]
+
+list_settings = [
+    'imports', 'CELERY_IMPORTS',
+    'accept_content', 'CELERY_ACCEPT_CONTENT',
+]
+
+tuple_list_settings = [
+    'admins', 'ADMINS',
+]
+
+dict_settings = [
+    'broker_transport_options', 'BROKER_TRANSPORT_OPTIONS',
+]
+
+
+def parse_list_setting(setting):
+    setting = setting.encode('ascii')
+    if setting.startswith('['):
+        setting = setting[1:]
+    if setting.endswith(']'):
+        setting = setting[:-1]
+    split_setting = setting.split()
+    return split_setting
+
+
+def parse_tuple_list_setting(setting):
+    setting = setting.encode('ascii')
+    if setting.startswith('[') or setting.endswith(']'):
+        setting = setting[1:]
+    if setting.endswith(']'):
+        setting = setting[:-1]
+    items = setting.split('\n')
+    tuple_settings = [tuple(item.split(',')) for item in items]
+    return tuple_settings
+
+
+def parse_dict_setting(setting):
+    return json.loads(setting.encode('ascii'))
+
+
 class INILoader(celery.loaders.base.BaseLoader):
     def __init__(self, app, **kwargs):
         self.celery_conf = kwargs.pop('ini_file')
         self.parser = configparser.SafeConfigParser()
         self.parser.optionxform = str
-
         super(INILoader, self).__init__(app, **kwargs)
 
     def read_configuration(self, fail_silently=True):
         self.parser.read(self.celery_conf)
         config_dict = dict(self.parser.items('celery'))
 
-        #: TODO: There might be other variables requiring special handling
-        bool_settings = [
-            'always_eager', 'CELERY_ALWAYS_EAGER',
-            'enable_utc', 'CELERY_ENABLE_UTC',
-            'result_persistent', 'CELERY_RESULT_PERSISTENT',
-            'worker_hijack_root_logger', 'CELERYD_HIJACK_ROOT_LOGGER',
-            'use_celeryconfig', 'USE_CELERYCONFIG',
-        ]
-
-        for setting in bool_settings:
-            if setting in config_dict:
-                config_dict[setting] = asbool(config_dict[setting])
-
-        list_settings = [
-            'imports', 'CELERY_IMPORTS',
-            'accept_content', 'CELERY_ACCEPT_CONTENT',
-        ]
-
-        for setting in list_settings:
-            if setting in config_dict:
-                split_setting = config_dict[setting].split()
-                config_dict[setting] = split_setting
-
-        tuple_list_settings = [
-            'admins', 'ADMINS',
-        ]
-
-        for setting in tuple_list_settings:
-            if setting in config_dict:
-                items = config_dict[setting].split()
-                tuple_settings = [tuple(item.split(',')) for item in items]
-                config_dict[setting] = tuple_settings
-
-        dict_settings = [
-            'broker_transport_options', 'BROKER_TRANSPORT_OPTIONS',
-        ]
-
-        for setting in dict_settings:
-            if setting in config_dict:
-                try:
-                    value = json.loads(config_dict[setting])
-                except ValueError:
-                    value = config_dict[setting].strip().split()
-                    value = dict(pair.split('=') for pair in value)
-                config_dict[setting] = value
+        for setting in config_dict.keys():
+            try:
+                if setting in bool_settings:
+                    config_dict[setting] = self.parser.getboolean('celery', setting)
+                if setting in list_settings:
+                    config_dict[setting] = parse_list_setting(config_dict[setting])
+                if setting in tuple_list_settings:
+                    config_dict[setting] = parse_tuple_list_setting(config_dict[setting])
+                if setting in dict_settings:
+                    config_dict[setting] = parse_dict_setting(config_dict[setting])
+            except Exception as exc:
+                if not fail_silently:
+                    raise Exception('Can\'t parse value for {}. {}'.format(setting, exc.message))
+                logger.critical('Can\'t parse value for {}. Default value will be used.'.format(setting))
+                del config_dict[setting]
 
         beat_config = {}
         route_config = {}
 
         for section in self.parser.sections():
             if section.startswith('celerybeat:'):
-                name = section.split(':', 1)[1]
-                beat_config[name] = get_beat_config(self.parser, section)
+                try:
+                    name = section.split(':', 1)[1]
+                    beat_config[name] = get_beat_config(self.parser, section)
+                    if beat_config:
+                        set_all(config_dict, (
+                            'beat_schedule', 'CELERYBEAT_SCHEDULE'), beat_config)
+                except Exception as exc:
+                    if not fail_silently:
+                        raise Exception('Can\'t parse celerybeat config. {}'.format(exc.message))
+                    logger.critical('Can\'t parse celerybeat config. {}'.format(exc.message))
             elif section.startswith('celeryroute:'):
-                name = section.split(':', 1)[1]
-                route_config[name] = get_route_config(self.parser, section)
-
-        if beat_config:
-            set_all(config_dict, (
-                'beat_schedule', 'CELERYBEAT_SCHEDULE'), beat_config)
-
-        if route_config:
-            set_all(config_dict, (
-                'task_routes', 'CELERY_ROUTES'), route_config)
+                try:
+                    name = section.split(':', 1)[1]
+                    route_config[name] = get_route_config(self.parser, section)
+                    if route_config:
+                        set_all(config_dict, (
+                            'task_routes', 'CELERY_ROUTES'), route_config)
+                except Exception as exc:
+                    if not fail_silently:
+                        raise Exception('Can\'t parse celeryroute config', exc.message)
+                    logger.critical('Can\'t parse celeryroute config.' + exc.message)
 
         return config_dict
