@@ -148,7 +148,7 @@ class INILoader(celery.loaders.base.BaseLoader):
         self.parser.optionxform = str
         super(INILoader, self).__init__(app, **kwargs)
 
-    def read_configuration(self, fail_silently=True):
+    def read_configuration(self, fail_silently=False):
         self.parser.read(self.celery_conf)
         config_dict = dict(self.parser.items('celery'))
 
