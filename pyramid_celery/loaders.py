@@ -2,7 +2,6 @@ import datetime
 import json
 import celery.loaders.base
 import celery.schedules
-import logging
 from pyramid.compat import configparser
 from pyramid.exceptions import ConfigurationError
 
@@ -98,10 +97,6 @@ def get_route_config(parser, section):
     return config
 
 
-logging.basicConfig()
-
-logger = logging.getLogger(__name__)
-
 #: TODO: There might be other variables requiring special handling
 bool_settings = [
     'always_eager', 'CELERY_ALWAYS_EAGER',
@@ -127,20 +122,16 @@ dict_settings = [
 
 def parse_list_setting(setting):
     setting = setting.encode('ascii')
-    if setting.startswith('['):
-        setting = setting[1:]
-    if setting.endswith(']'):
-        setting = setting[:-1]
+    if setting.startswith('[') and setting.endswith(']'):
+        setting = setting[1:-1]
     split_setting = setting.split()
     return split_setting
 
 
 def parse_tuple_list_setting(setting):
     setting = setting.encode('ascii')
-    if setting.startswith('[') or setting.endswith(']'):
-        setting = setting[1:]
-    if setting.endswith(']'):
-        setting = setting[:-1]
+    if setting.startswith('[') and setting.endswith(']'):
+        setting = setting[1:-1]
     items = setting.split('\n')
     tuple_settings = [tuple(item.split(',')) for item in items]
     return tuple_settings
@@ -173,8 +164,7 @@ class INILoader(celery.loaders.base.BaseLoader):
                     config_dict[setting] = parse_dict_setting(config_dict[setting])
             except Exception as exc:
                 if not fail_silently:
-                    raise Exception('Can\'t parse value for {}. {}'.format(setting, exc.message))
-                logger.critical('Can\'t parse value for {}. Default value will be used.'.format(setting))
+                    raise ConfigurationError('Can\'t parse value for {}. {}'.format(setting, exc.message))
                 del config_dict[setting]
 
         beat_config = {}
@@ -190,8 +180,7 @@ class INILoader(celery.loaders.base.BaseLoader):
                             'beat_schedule', 'CELERYBEAT_SCHEDULE'), beat_config)
                 except Exception as exc:
                     if not fail_silently:
-                        raise Exception('Can\'t parse celerybeat config. {}'.format(exc.message))
-                    logger.critical('Can\'t parse celerybeat config. {}'.format(exc.message))
+                        raise ConfigurationError('Can\'t parse celerybeat config. {}'.format(exc.message))
             elif section.startswith('celeryroute:'):
                 try:
                     name = section.split(':', 1)[1]
@@ -201,7 +190,6 @@ class INILoader(celery.loaders.base.BaseLoader):
                             'task_routes', 'CELERY_ROUTES'), route_config)
                 except Exception as exc:
                     if not fail_silently:
-                        raise Exception('Can\'t parse celeryroute config', exc.message)
-                    logger.critical('Can\'t parse celeryroute config.' + exc.message)
+                        raise ConfigurationError('Can\'t parse celeryroute config', exc.message)
 
         return config_dict
