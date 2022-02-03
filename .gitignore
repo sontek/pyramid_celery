@@ -48,3 +48,4 @@ docs/_build
 coverage.xml
 junit.xml
 *celerybeat-schedule*
+.idea/modules.xml

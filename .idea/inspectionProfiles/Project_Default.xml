@@ -1,0 +1,18 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <option name="scopesOrder">
+      <list>
+        <option value="All Changed Files" />
+        <option value="Open Files" />
+        <option value="Project Files" />
+        <option value="Scratches and Consoles" />
+        <option value="pyramid_celery_scope" />
+      </list>
+    </option>
+    <inspection_tool class="TaskProblemsInspection" enabled="true" level="ERROR" enabled_by_default="false">
+      <scope name="Project Files" level="ERROR" enabled="true" />
+      <scope name="pyramid_celery_scope" level="WEAK WARNING" enabled="false" />
+    </inspection_tool>
+  </profile>
+</component>
