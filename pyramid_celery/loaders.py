@@ -121,11 +121,17 @@ dict_settings = [
 
 
 def parse_list_setting(setting):
+    setting = setting.encode('ascii')
+    if setting.startswith('[') and setting.endswith(']'):
+        setting = setting[1:-1]
     split_setting = setting.split()
     return split_setting
 
 
 def parse_tuple_list_setting(setting):
+    setting = setting.encode('ascii')
+    if setting.startswith('[') and setting.endswith(']'):
+        setting = setting[1:-1]
     items = setting.split('\n')
     tuple_settings = [tuple(item.split(',')) for item in items]
     return tuple_settings
