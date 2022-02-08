@@ -4,6 +4,7 @@ from celery import VERSION as celery_version
 from celery.bin import Option
 from pyramid.paster import bootstrap, setup_logging
 from pyramid_celery.loaders import INILoader, get_any, set_all
+from pyramid_celery.bootsteps import DeadlockDetection
 
 
 def add_preload_arguments(parser):
@@ -19,6 +20,7 @@ def add_preload_arguments(parser):
 
 def make_app():
     app = Celery()
+    app.steps['worker'].add(DeadlockDetection)
     if celery_version.major > 3:
         app.user_options['preload'].add(add_preload_arguments)
     else:
