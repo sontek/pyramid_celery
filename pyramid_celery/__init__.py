@@ -20,7 +20,6 @@ def add_preload_arguments(parser):
 
 def make_app():
     app = Celery()
-    app.steps['worker'].add(DeadlockDetection)
     if celery_version.major > 3:
         app.user_options['preload'].add(add_preload_arguments)
     else:
@@ -106,5 +105,10 @@ def configure(config, ini_location):
     setup_app(ini_location)
 
 
+def configure_bootsteps(config):
+    celery_app.steps['worker'].add(DeadlockDetection)
+
+
 def includeme(config):
     config.add_directive('configure_celery', configure)
+    config.add_directive('configure_celery_bootsteps', configure_bootsteps)
