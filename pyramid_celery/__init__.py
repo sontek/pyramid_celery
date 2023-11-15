@@ -70,7 +70,7 @@ def setup_app(app, root, request, registry, closer, ini_location):
     )
 
     if asbool(celery_config.get('use_celeryconfig', False)) is True:
-        config_path = 'celeryconfig'
+        config_path = celery_config.get('celery_config_module', 'celeryconfig')
         celery_app.config_from_object(config_path)
     else:
         hijack_key = 'worker_hijack_root_logger'
