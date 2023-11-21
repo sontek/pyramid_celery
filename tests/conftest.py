@@ -1,10 +1,7 @@
 import pyramid_celery
 import pytest
 
-try:
-    from celery import Celery
-except ImportError:
-    from celery.app import Celery
+from celery import Celery
 
 
 @pytest.fixture(autouse=True)

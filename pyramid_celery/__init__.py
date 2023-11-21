@@ -1,7 +1,4 @@
-try:
-    from celery import Celery
-except ImportError:
-    from celery.app import Celery
+from celery import Celery
 from celery import signals
 from celery import VERSION as celery_version
 
