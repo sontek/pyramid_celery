@@ -22,6 +22,13 @@ jobs:
         python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11', '3.12' ]
     steps:
      - uses: actions/checkout@v1
+     - name: Cache .tox directory
+       uses: actions/cache@v2
+       with:
+         path: '.tox'
+         # -X at the end can be bumped to force by-pass of a cache in case it's broken
+         # as GitHub actions does not support deletion of caches...
+         key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('*requirements*.txt') }}-X
      - name: Set up Python ${{ matrix.python-version }}
        uses: actions/setup-python@v2
        with:
