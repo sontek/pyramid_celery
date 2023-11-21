@@ -53,6 +53,22 @@ def test_includeme_use_celeryconfig():
 
 
 @pytest.mark.unit
+def test_includeme_use_custom_celeryconfig():
+    from pyramid_celery import includeme
+    from pyramid_celery import celery_app
+    from pyramid import testing
+    from pyramid.registry import Registry
+    config = testing.setUp()
+    config.registry = Registry()
+    config.registry.settings = {}
+
+    includeme(config)
+    config.configure_celery('tests/configs/custom_useceleryconfig.ini')
+
+    assert celery_app.conf['broker_url'] == 'redis://localhost:1337/1'
+
+
+@pytest.mark.unit
 def test_preload_no_ini():
     from pyramid_celery import on_preload_parsed
     options = {
@@ -74,7 +90,7 @@ def test_preload_ini():
 
     with mock.patch('pyramid_celery.bootstrap') as boot:
         on_preload_parsed(options)
-        assert boot.called_with('dev.ini')
+    boot.assert_called_with(options['ini'])
 
 
 @pytest.mark.unit
@@ -105,8 +121,8 @@ def test_preload_with_ini_vars():
 
     with mock.patch('pyramid_celery.bootstrap') as boot:
         on_preload_parsed(options)
-        expected_vars = {'database': 'foo', 'password': 'bar'}
-        assert boot.called_with('dev.ini', expected_vars)
+    expected_vars = {'database': 'foo', 'password': 'bar'}
+    boot.assert_called_with(options['ini'], options=expected_vars)
 
 
 @pytest.mark.unit
@@ -127,7 +143,7 @@ def test_ini_logging():
             format='', colorize=False,
         )
 
-    assert setup_logging.called_with('tests/configs/dev.ini')
+    setup_logging.assert_called_with('tests/configs/dev.ini')
 
 
 @pytest.mark.unit

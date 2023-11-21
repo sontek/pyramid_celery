@@ -48,3 +48,7 @@ docs/_build
 coverage.xml
 junit.xml
 *celerybeat-schedule*
+
+# IDE
+.idea
+.vscode
