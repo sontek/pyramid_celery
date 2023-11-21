@@ -90,7 +90,7 @@ def test_preload_ini():
 
     with mock.patch('pyramid_celery.bootstrap') as boot:
         on_preload_parsed(options)
-        assert boot.called_with('dev.ini')
+    boot.assert_called_with(options['ini'])
 
 
 @pytest.mark.unit
@@ -121,8 +121,8 @@ def test_preload_with_ini_vars():
 
     with mock.patch('pyramid_celery.bootstrap') as boot:
         on_preload_parsed(options)
-        expected_vars = {'database': 'foo', 'password': 'bar'}
-        assert boot.called_with('dev.ini', expected_vars)
+    expected_vars = {'database': 'foo', 'password': 'bar'}
+    boot.assert_called_with(options['ini'], options=expected_vars)
 
 
 @pytest.mark.unit
@@ -143,7 +143,7 @@ def test_ini_logging():
             format='', colorize=False,
         )
 
-    assert setup_logging.called_with('tests/configs/dev.ini')
+    setup_logging.assert_called_with('tests/configs/dev.ini')
 
 
 @pytest.mark.unit
