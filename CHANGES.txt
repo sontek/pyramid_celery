@@ -1,3 +1,8 @@
+5.0.0a
+================
+- Add support of Python 3.12
+- Add support `celery_config_module` option for alternate location of `celeryconfig.py`
+
 4.0.0
 ================
 - Drop support for celery 3.0
