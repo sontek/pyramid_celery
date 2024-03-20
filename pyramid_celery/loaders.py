@@ -91,6 +91,18 @@ def get_route_config(parser, section):
     return config
 
 
+def safe_conversion(value):
+    """convert a string to a more specific type"""
+    if value.lower() in ("true", "false"):
+        return bool(value)
+    try:
+        if float(value).is_integer():
+            return int(value)
+        return float(value)
+    except ValueError:
+        return value
+
+
 class INILoader(celery.loaders.base.BaseLoader):
     ConfigParser = configparser.SafeConfigParser
 
@@ -106,7 +118,7 @@ class INILoader(celery.loaders.base.BaseLoader):
         config_dict = {}
 
         for key, value in self.parser.items('celery'):
-            config_dict[key] = value
+            config_dict[key] = safe_conversion(value)
 
         if celery_version.major > 6:
             # TODO: Check for invalid settings
