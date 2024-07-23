@@ -1,0 +1,49 @@
+image: python:latest
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  #
+  PUBLIC_REGISTRY_PROJECT_ID: 32304092
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+stages:
+  - check
+  - deploy
+
+before_script:
+  - python -V  # Print out python version for debugging
+
+ruff:
+  stage: check
+  script:
+    - pip install ruff
+    - ruff check --output-format=gitlab --output-file gl-code-quality-report.json pyramid_celery
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+
+# test:
+#   script:
+#     - pip install .
+#     - flake8 --exit-zero --format gl-codeclimate --output-file examples-report.json --tee examples/
+#     - python -m json.tool < examples-report.json
+
+deploy_local:
+  stage: deploy
+  script:
+    - env
+    - pip install twine build
+    - python -m build -w
+    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+
+deploy_public:
+  stage: deploy
+  script:
+    - env
+    - pip install twine build
+    - python -m build -w
+    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${PUBLIC_REGISTRY_PROJECT_ID}/packages/pypi dist/*
